@@ -611,6 +611,7 @@ class Game {
         this.enemyTimer = 0;
         this.enemyInterval = 100;
         this.updateLivesUI(); // Initial Hearts
+        this.setupSettings();
     }
 
     updateLivesUI() {
@@ -749,6 +750,7 @@ class Game {
             this.bestScore = this.score;
             localStorage.setItem('pepecoin_bestscore', this.bestScore);
         }
+        this.updateLeaderboard(this.score);
 
         document.getElementById('final-score').innerText = this.score;
         document.getElementById('best-score').innerText = this.bestScore;
@@ -866,6 +868,70 @@ class Game {
         document.getElementById('score').innerText = '0';
         this.updateLivesUI();
         this.input.keys = {}; // Fully clear all keys on reset
+    }
+
+    setupSettings() {
+        const btnSettings = document.getElementById('btn-settings');
+        const panel = document.getElementById('settings-panel');
+        const btnClose = document.getElementById('close-settings');
+        const toggleCRT = document.getElementById('toggle-crt');
+        const toggleGlow = document.getElementById('toggle-glow');
+        const scanlines = document.querySelector('.scanlines');
+        const crtGlow = document.querySelector('.crt-glow');
+
+        if (btnSettings) {
+            btnSettings.onclick = () => {
+                panel.classList.remove('hidden');
+                this.updateLeaderboardUI();
+                if (this.state === 'PLAYING') this.state = 'START'; // Pause game if needed
+            };
+        }
+
+        if (btnClose) {
+            btnClose.onclick = () => {
+                panel.classList.add('hidden');
+            };
+        }
+
+        if (toggleCRT) {
+            toggleCRT.onchange = (e) => {
+                scanlines.style.display = e.target.checked ? 'block' : 'none';
+            };
+        }
+
+        if (toggleGlow) {
+            toggleGlow.onchange = (e) => {
+                crtGlow.style.display = e.target.checked ? 'block' : 'none';
+            };
+        }
+    }
+
+    updateLeaderboard(newScore) {
+        let scores = JSON.parse(localStorage.getItem('pepecoin_leaderboard')) || [];
+        const playerName = "PEPE_" + Math.floor(Math.random() * 999);
+        scores.push({ name: playerName, score: newScore });
+        scores.sort((a, b) => b.score - a.score);
+        scores = scores.slice(0, 10); // Keep top 10
+        localStorage.setItem('pepecoin_leaderboard', JSON.stringify(scores));
+    }
+
+    updateLeaderboardUI() {
+        const list = document.getElementById('leaderboard-list');
+        if (!list) return;
+
+        let scores = JSON.parse(localStorage.getItem('pepecoin_leaderboard')) || [];
+        if (scores.length === 0) {
+            list.innerHTML = '<div class="leaderboard-item">NO SCORES YET</div>';
+            return;
+        }
+
+        list.innerHTML = scores.map((s, i) => `
+            <div class="leaderboard-item">
+                <span class="rank">${i + 1}</span>
+                <span class="name">${s.name}</span>
+                <span class="score">${s.score}</span>
+            </div>
+        `).join('');
     }
 }
 

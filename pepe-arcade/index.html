@@ -76,6 +76,12 @@
                 <div class="coin-slot-hole"></div>
             </div>
 
+            <!-- Service/Settings Button -->
+            <div class="service-panel-btn" id="btn-settings" title="Service Menu">
+                <div class="btn-inner"></div>
+                <div class="btn-label">SERVICE</div>
+            </div>
+
             <div class="joystick-area">
                 <div class="stick-base"></div>
                 <div class="stick-handle" id="joystick"></div>
@@ -97,6 +103,36 @@
 
     <!-- Extend cabinet bottom -->
     <div class="cabinet-fill-bottom"></div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="settings-panel hidden">
+        <div class="settings-content">
+            <button class="close-settings" id="close-settings">&times;</button>
+            <h2>SERVICE PANEL</h2>
+
+            <div class="settings-section">
+                <h3>SCREEN SETTINGS</h3>
+                <div class="toggle-group">
+                    <label>CRT SCANLINES</label>
+                    <input type="checkbox" id="toggle-crt" checked>
+                </div>
+                <div class="toggle-group">
+                    <label>SCREEN GLOW</label>
+                    <input type="checkbox" id="toggle-glow" checked>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>TOP COMMANDERS</h3>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <!-- Loaded via JS -->
+                    <div class="leaderboard-item loading">LOADING SCORES...</div>
+                </div>
+            </div>
+
+            <p class="panel-footer">PEPE ARCADE SYSTEM V1.0</p>
+        </div>
+    </div>
 
     <script src="game.js"></script>
 </body>
