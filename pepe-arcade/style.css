@@ -1122,6 +1122,15 @@ h1 {
     z-index: 1;
     /* Behind the cabinet */
     overflow: hidden;
+    display: none;
+    /* Hidden by default on small screens */
+}
+
+@media (min-width: 1200px) {
+    #wall-sticker-container {
+        display: block;
+        /* Show only on wider screens */
+    }
 }
 
 .wall-sticker-wrapper {
