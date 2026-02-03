@@ -806,9 +806,51 @@ class Game {
         // Share logic
         const btnShare = document.getElementById('btn-share');
         if (btnShare) {
-            btnShare.onclick = () => {
-                const text = `I just scored ${this.score} in $PEPECOIN ARCADE! 🐸🕹️\n\nCan you beat my high score? Play now at https://pepecoin-arcade.vercel.app #PEPECOIN #ARCADE #BASED`;
-                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+            btnShare.onclick = async () => {
+                if (typeof html2canvas === 'undefined') {
+                    console.error('html2canvas not loaded');
+                    return;
+                }
+
+                const originalText = btnShare.innerText;
+                btnShare.innerText = 'CAPTURING...';
+                btnShare.style.opacity = '0.5';
+                btnShare.style.pointerEvents = 'none';
+
+                try {
+                    // Give a tiny delay for hover states to settle
+                    await new Promise(r => setTimeout(r, 100));
+
+                    const canvas = await html2canvas(document.body, {
+                        backgroundColor: '#1a1a1a',
+                        useCORS: true,
+                        scale: 1,
+                        logging: false
+                    });
+
+                    // Download the screenshot
+                    const link = document.createElement('a');
+                    link.download = `pepecoin-arcade-score-${this.score}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                    // Open Twitter intent
+                    const text = `I just scored ${this.score} in $PEPECOIN ARCADE! 🐸🕹️\n\nCan you beat my high score? Play now at https://pepecoin-arcade.vercel.app #PEPECOIN #ARCADE #BASED`;
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+
+                    // Small alert to guide the user
+                    setTimeout(() => {
+                        alert("Screenshot saved! Don't forget to attach it to your post! 🐸📸");
+                    }, 1000);
+
+                } catch (err) {
+                    console.error('Screenshot failed:', err);
+                    alert("Capture failed, but you can still share your score!");
+                } finally {
+                    btnShare.innerText = originalText;
+                    btnShare.style.opacity = '1';
+                    btnShare.style.pointerEvents = 'auto';
+                }
             };
         }
     }
