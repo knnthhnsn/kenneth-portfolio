@@ -590,7 +590,7 @@ class Game {
         this.assets.queueImage('player_walk2', './assets/pepe_frame_foot_walk_2.png');
         this.assets.queueImage('projectile', './assets/projectile.png');
         this.assets.queueImage('impact', './assets/impact_effect.png');
-        this.assets.queueImage('helicopter', './assets/helicopter_support.png');
+        this.assets.queueImage('helicopter', './assets/fake_pepe.png');
 
         this.bgKeys = ['bg1', 'bg2', 'bg3', 'bg4'];
         this.assets.queueImage('bg1', './assets/Backgrounds/community-art2.avif');
