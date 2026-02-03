@@ -707,6 +707,7 @@ class Game {
             this.effects.forEach(eff => eff.update());
             this.effects = this.effects.filter(eff => !eff.markedForDeletion);
             this.checkCollisions();
+            this.checkCollisions();
         }
     }
 
@@ -818,7 +819,6 @@ class Game {
                 btnShare.style.pointerEvents = 'none';
 
                 try {
-                    // Give a tiny delay for hover states to settle
                     await new Promise(r => setTimeout(r, 100));
 
                     const canvas = await html2canvas(document.body, {
@@ -828,34 +828,38 @@ class Game {
                         logging: false
                     });
 
-                    // 1. Download the screenshot as backup
+                    // 1. Download backup for everyone
                     const link = document.createElement('a');
                     link.download = `pepecoin-arcade-score-${this.score}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
 
-                    // 2. Copy to Clipboard (The "Pro" feature)
-                    try {
-                        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                        if (navigator.clipboard && window.ClipboardItem) {
-                            const data = [new ClipboardItem({ 'image/png': blob })];
-                            await navigator.clipboard.write(data);
-                            console.log('Image copied to clipboard');
-                        }
-                    } catch (clipErr) {
-                        console.error('Clipboard copy failed:', clipErr);
-                        // Fallback: the download still happened
-                    }
-
-                    // 3. Open Twitter intent
                     const text = `I just scored ${this.score} in $PEPECOIN ARCADE! 🐸🕹️\n\nCan you beat my high score? Play now at https://pepecoin-arcade.vercel.app #PEPECOIN #ARCADE #BASED`;
-                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                    const file = new File([blob], `pepe-score-${this.score}.png`, { type: 'image/png' });
 
-                    // Small alert to guide the user
-                    setTimeout(() => {
-                        alert("Screenshot copied! Just press Ctrl+V (Paste) in your post to attach it! 🐸📸✂️");
-                    }, 1000);
+                    // 2. Share Logic
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                        // Native Share (Mobile: bypasses popup blocker & attaches image)
+                        await navigator.share({
+                            text: text,
+                            files: [file]
+                        });
+                    } else {
+                        // Desktop/Fallback: Copy to Clipboard + Twitter Intent
+                        try {
+                            if (navigator.clipboard && window.ClipboardItem) {
+                                const data = [new ClipboardItem({ 'image/png': blob })];
+                                await navigator.clipboard.write(data);
+                            }
+                        } catch (e) { console.error('Clip error:', e); }
 
+                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+
+                        setTimeout(() => {
+                            alert("Screenshot copied! Just press Paste in your post to attach it! 🐸📸✂️");
+                        }, 1000);
+                    }
                 } catch (err) {
                     console.error('Screenshot failed:', err);
                     alert("Capture failed, but you can still share your score!");
