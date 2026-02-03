@@ -842,51 +842,56 @@ h1 {
     }
 
     .control-panel {
-        height: 100px;
-        padding: 8px 10px;
-        transform: perspective(600px) rotateX(12deg) rotateY(0deg);
+        height: auto;
+        min-height: 120px;
+        padding: 15px 20px 20px;
+        transform: none;
+        /* Remove 3D tilt on mobile for easier touch */
+        justify-content: center;
+        gap: 30px;
     }
 
     .arcade-btn {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
         box-shadow: 0 4px 0 #222, 0 6px 10px rgba(0, 0, 0, 0.6);
     }
 
     .buttons-group {
-        gap: 10px;
+        gap: 15px;
+        flex-direction: row;
     }
 
     .stick-base {
-        width: 55px;
-        height: 55px;
+        width: 70px;
+        height: 70px;
     }
 
     .stick-handle {
-        width: 50px;
-        height: 50px;
-        margin-left: -25px;
-        margin-top: -25px;
-        top: -25%;
+        width: 60px;
+        height: 60px;
+        margin-left: -30px;
+        margin-top: -30px;
+        top: -20%;
     }
 
     .stick-handle::before {
-        width: 14px;
-        height: 65px;
+        width: 16px;
+        height: 70px;
     }
 
     .stick-handle::after {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
     }
 
     .joystick-area {
-        width: 80px;
+        width: 90px;
     }
 
     .btn-label {
-        font-size: 5px;
-        margin-top: 5px;
+        font-size: 7px;
+        margin-top: 8px;
     }
 
     .brand-logo {
