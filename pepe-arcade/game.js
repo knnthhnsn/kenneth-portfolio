@@ -707,7 +707,6 @@ class Game {
             this.effects.forEach(eff => eff.update());
             this.effects = this.effects.filter(eff => !eff.markedForDeletion);
             this.checkCollisions();
-            this.checkCollisions();
         }
     }
 
@@ -808,8 +807,27 @@ class Game {
         const btnShare = document.getElementById('btn-share');
         if (btnShare) {
             btnShare.onclick = async () => {
+                const text = `I just scored ${this.score} in $PEPECOIN ARCADE! 🐸🕹️\n\nCan you beat my high score? Play now at https://pepecoin-arcade.vercel.app #PEPECOIN #ARCADE #BASED`;
+                const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+                const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+                // For touch devices, skip the laggy/glitchy screenshot and just share/redirect
+                if (isTouch) {
+                    if (navigator.share) {
+                        try {
+                            await navigator.share({ text: text });
+                            return;
+                        } catch (e) {
+                            console.log('Share failed, opening via URL');
+                        }
+                    }
+                    window.location.href = tweetUrl;
+                    return;
+                }
+
+                // Desktop Workflow (Screenshot + Clipboard)
                 if (typeof html2canvas === 'undefined') {
-                    console.error('html2canvas not loaded');
+                    window.open(tweetUrl, '_blank');
                     return;
                 }
 
@@ -821,43 +839,22 @@ class Game {
 
                 try {
                     await new Promise(r => setTimeout(r, 300));
-
                     const canvas = await html2canvas(document.body, {
                         backgroundColor: '#1a1a1a',
                         useCORS: true,
-                        scale: window.devicePixelRatio > 1 ? 2 : 1, // Higher res
+                        scale: window.devicePixelRatio > 1 ? 2 : 1,
                         logging: false
                     });
 
-                    // Remove class immediately after capture
                     document.body.classList.remove('screenshot-mode');
 
-                    // 1. Download backup for everyone
+                    // 1. Download backup
                     const link = document.createElement('a');
                     link.download = `pepecoin-arcade-score-${this.score}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
 
-                    const text = `I just scored ${this.score} in $PEPECOIN ARCADE! 🐸🕹️\n\nCan you beat my high score? Play now at https://pepecoin-arcade.vercel.app #PEPECOIN #ARCADE #BASED`;
-                    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-
-                    // Try Native Share first (Mobile/Touch)
-                    if (navigator.share && navigator.canShare) {
-                        try {
-                            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                            const file = new File([blob], `pepe-score-${this.score}.png`, { type: 'image/png' });
-
-                            if (navigator.canShare({ files: [file] })) {
-                                await navigator.share({
-                                    text: text,
-                                    files: [file]
-                                });
-                                return; // Success!
-                            }
-                        } catch (e) { console.log('Native share failed, falling back...'); }
-                    }
-
-                    // Fallback: Clipboard Copy + New Tab (Works for both Mobile and Desktop)
+                    // 2. Clipboard Copy
                     try {
                         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
                         if (navigator.clipboard && window.ClipboardItem) {
@@ -866,20 +863,15 @@ class Game {
                         }
                     } catch (e) { console.error('Clip fail:', e); }
 
-                    // Force open the tweet URL
-                    // On mobile, this needs to be very direct to bypass blockers
-                    const xWindow = window.open(tweetUrl, '_blank');
-                    if (!xWindow) {
-                        // If blocked, use location.href as last resort
-                        window.location.href = tweetUrl;
-                    } else {
-                        setTimeout(() => {
-                            alert("Screenshot copied! Just press Paste to attach it to your post! 🐸📸✂️");
-                        }, 1000);
-                    }
+                    // 3. Open X
+                    window.open(tweetUrl, '_blank');
+
+                    setTimeout(() => {
+                        alert("Screenshot copied! Just press Paste to attach it to your post! 🐸📸✂️");
+                    }, 1000);
                 } catch (err) {
                     console.error('Screenshot failed:', err);
-                    alert("Capture failed, but you can still share your score!");
+                    window.open(tweetUrl, '_blank');
                 } finally {
                     btnShare.innerText = originalText;
                     btnShare.style.opacity = '1';
