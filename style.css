@@ -1779,37 +1779,38 @@ input[type="checkbox"]:checked::after {
 
 /* Jackpot Prizes in Payment Overlay */
 .jackpot-prizes {
-    margin: 10px 0;
+    margin: 5px 0;
+    line-height: 1.1;
 }
 
 .prize-header {
     font-size: 10px;
     color: #ffd700;
-    margin-bottom: 5px;
+    margin: 0 0 3px 0;
 }
 
 .prize-total {
     color: #00ffff;
     font-size: 9px;
-    margin: 2px 0 5px 0;
+    margin: 0 0 2px 0;
 }
 
 .prize-1st {
     color: #ffd700;
     font-size: 8px;
-    margin: 2px 0;
+    margin: 0;
 }
 
 .prize-2nd {
     color: #c0c0c0;
     font-size: 8px;
-    margin: 2px 0;
+    margin: 0;
 }
 
 .prize-3rd {
     color: #cd7f32;
     font-size: 8px;
-    margin: 2px 0;
+    margin: 0;
 }
 
 /* Intro Overlay */
