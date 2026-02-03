@@ -1134,27 +1134,45 @@ class Game {
             if (!this.isConnected) return false;
         }
 
-        // 1. Check Allowance
-        try {
-            const allowance = await this.pepeContract.allowance(this.userAddress, ARCADE_CONTRACT);
-            const fee = ethers.parseEther("1.0");
+        const overlay = document.getElementById('payment-overlay');
+        const payBtn = document.getElementById('btn-confirm-pay');
+        if (!overlay || !payBtn) return false;
 
-            if (allowance < fee) {
-                const txApprove = await this.pepeContract.approve(ARCADE_CONTRACT, ethers.MaxUint256);
-                await txApprove.wait();
-            }
+        overlay.classList.remove('hidden');
 
-            // 2. Play Game TX
-            const txPlay = await this.arcadeContract.playGame();
-            const receipt = await txPlay.wait();
+        return new Promise((resolve) => {
+            payBtn.onclick = async () => {
+                payBtn.disabled = true;
+                payBtn.innerText = "WAITING...";
 
-            this.updateJackpotStatus();
-            return true;
-        } catch (err) {
-            console.error("Payment failed:", err);
-            alert("Payment failed or cancelled.");
-            return false;
-        }
+                try {
+                    // 1. Check Allowance
+                    const allowance = await this.pepeContract.allowance(this.userAddress, ARCADE_CONTRACT);
+                    const fee = ethers.parseUnits("100", 18); // Option B: 100 PEPE
+
+                    if (allowance < fee) {
+                        const txApprove = await this.pepeContract.approve(ARCADE_CONTRACT, ethers.MaxUint256);
+                        await txApprove.wait();
+                    }
+
+                    // 2. Play Game TX
+                    const txPlay = await this.arcadeContract.playGame();
+                    await txPlay.wait();
+
+                    this.updateJackpotStatus();
+                    overlay.classList.add('hidden');
+                    resolve(true);
+                } catch (err) {
+                    console.error("Payment failed:", err);
+                    alert("Payment failed or cancelled.");
+                    overlay.classList.add('hidden');
+                    resolve(false);
+                } finally {
+                    payBtn.disabled = false;
+                    payBtn.innerText = "PAY 100 $PEPE";
+                }
+            };
+        });
     }
 
     async submitScoreToChain(score) {
