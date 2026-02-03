@@ -1790,26 +1790,26 @@ input[type="checkbox"]:checked::after {
 
 .prize-header {
     font-size: 9px;
-    color: #ffd700;
+    color: #ffd700 !important;
 }
 
 .prize-total {
-    color: #ffd700;
+    color: #ffd700 !important;
     font-size: 8px;
 }
 
 .prize-1st {
-    color: #ffd700;
+    color: #ffd700 !important;
     font-size: 7px;
 }
 
 .prize-2nd {
-    color: #ffd700;
+    color: #ffd700 !important;
     font-size: 7px;
 }
 
 .prize-3rd {
-    color: #ffd700;
+    color: #ffd700 !important;
     font-size: 7px;
 }
 
