@@ -848,8 +848,12 @@ window.onload = () => {
         wrapper.style.top = top + (isWall ? 'vh' : '%');
         wrapper.style.transform = `rotate(${rot}deg) scale(${scale})`;
 
+        // precise shine mask
+        const imgSrc = `./assets/cabinet-sticker/${filename}`;
+        wrapper.style.setProperty('--sticker-mask', `url(${imgSrc})`);
+
         const img = document.createElement('img');
-        img.src = `./assets/cabinet-sticker/${filename}`;
+        img.src = imgSrc;
         img.className = isWall ? 'wall-sticker' : 'sticker';
         wrapper.appendChild(img);
 

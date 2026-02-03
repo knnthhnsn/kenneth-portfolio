@@ -99,7 +99,54 @@ body {
 }
 
 .sticker-wrapper:hover .sticker {
-    filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.8));
+    filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.8)) brightness(1.1);
+}
+
+/* Shine Effect */
+.sticker-wrapper::after,
+.wall-sticker-wrapper::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0) 45%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0) 55%,
+            rgba(255, 255, 255, 0) 100%);
+    transform: rotate(30deg);
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+    /* The mask will be set via JS to match the sticker image */
+    -webkit-mask-image: var(--sticker-mask);
+    mask-image: var(--sticker-mask);
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+
+.sticker-wrapper:hover::after,
+.wall-sticker-wrapper:hover::after {
+    opacity: 1;
+    animation: stickerShine 1s ease-in-out infinite;
+}
+
+@keyframes stickerShine {
+    0% {
+        left: -150%;
+    }
+
+    100% {
+        left: 100%;
+    }
 }
 
 .tape {
