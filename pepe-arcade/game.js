@@ -853,11 +853,9 @@ window.onload = () => {
         wrapper.onclick = () => window.open('https://basedman.io', '_blank');
 
         // Create inner content wrapper for clipping the shine
+        const imgSrc = `./assets/cabinet-sticker/${filename}`;
         const innerContent = document.createElement('div');
         innerContent.className = 'sticker-content';
-        // Match the mask for the shine on this inner element if we stick with masking, 
-        // but primarily this is for overflow:hidden if we switch techniques.
-        // For now, we keep the mask var but move it here just in case style needs it.
         innerContent.style.setProperty('--sticker-mask', `url(${imgSrc})`);
 
         const img = document.createElement('img');
