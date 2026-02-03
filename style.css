@@ -1970,6 +1970,21 @@ input[type="checkbox"]:checked::after {
     letter-spacing: 1px;
 }
 
+.monitor-jackpot {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #222;
+    text-align: center;
+    color: #ff4444;
+    /* Retro alert red */
+    font-size: 8px;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+.monitor-jackpot span {
+    color: #fff;
+}
+
 /* Responsive Monitor Positioning */
 @media (max-width: 1200px) {
     .global-monitor {

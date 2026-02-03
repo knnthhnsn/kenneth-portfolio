@@ -23,6 +23,9 @@
                 <div class="rank-item empty">---</div>
                 <div class="rank-item empty">---</div>
             </div>
+            <div id="jackpot-status" class="monitor-jackpot hidden">
+                <span id="pool-count">0</span>/60 GAMES
+            </div>
             <div class="monitor-footer">ON-CHAIN DATA</div>
         </div>
     </div>
@@ -32,16 +35,14 @@
 
         <!-- Marquee / Top -->
         <div class="marquee">
-            <div class="marquee-text">$PEPECOIN ARCADE V2.4</div>
+            <div class="marquee-text">$PEPECOIN ARCADE V2.5</div>
         </div>
 
         <div class="monitor-bezel">
             <div class="screen-container">
                 <div id="lives-display"></div>
                 <div id="score-display">SCORE: <span id="score">0</span></div>
-                <div id="jackpot-status" class="hidden">
-                    JACKPOT: <span id="pool-count">0</span>/60 GAMES
-                </div>
+                <!-- Jackpot status moved to global monitor -->
                 <button id="btn-connect" class="connect-btn hidden">CONNECT WALLET</button>
 
                 <!-- Intro Overlay -->
