@@ -11,14 +11,15 @@ contract PepecoinArcade {
     address public owner;
     address public pepecoinAddress = 0xA9E8aCf069C58aEc8825542845Fd754e41a9489A;
     
-    uint256 public constant ENTRY_FEE = 1 * 10**18; 
-    uint256 public constant CYCLE_SIZE = 60;
+    // Adjustable Parameters (Option B: 100 PEPE Entry)
+    uint256 public entryFee = 100 * 10**18; 
+    uint256 public cycleSize = 60;
     
-    // Payout split: 25 (1st), 10 (2nd), 5 (3rd), 20 (Dev) = 60 total
-    uint256 public constant PAYOUT_1ST = 25 * 10**18;
-    uint256 public constant PAYOUT_2ND = 10 * 10**18;
-    uint256 public constant PAYOUT_3RD = 5 * 10**18;
-    uint256 public constant PAYOUT_DEV = 20 * 10**18;
+    // Payout split: Total 6000 tokens collected per 60 games
+    uint256 public payout1st = 2500 * 10**18;
+    uint256 public payout2nd = 1000 * 10**18;
+    uint256 public payout3rd = 500 * 10**18;
+    uint256 public payoutDev = 2000 * 10**18;
 
     struct Player {
         address addr;
@@ -33,18 +34,44 @@ contract PepecoinArcade {
     event GamePlayed(address indexed player, uint256 totalGames);
     event PayoutTriggered(address indexed p1, address indexed p2, address indexed p3, uint256 totalAmount);
     event NewHighScore(address indexed player, uint256 score, uint256 rank);
+    event SettingsUpdated(string parameter, uint256 newValue);
 
     constructor() {
         owner = 0xAfBDfCDfa5454E45aa9AeE833DF87cC3Ec511d1b;
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
+    }
+
+    // ADMIN FUNCTIONS - Change rules without redeploying
+    function setEntryFee(uint256 _fee) external onlyOwner {
+        entryFee = _fee;
+        emit SettingsUpdated("entryFee", _fee);
+    }
+
+    function setCycleSize(uint256 _size) external onlyOwner {
+        cycleSize = _size;
+        emit SettingsUpdated("cycleSize", _size);
+    }
+
+    function setPayouts(uint256 _p1, uint256 _p2, uint256 _p3, uint256 _dev) external onlyOwner {
+        // Ensure total equals the tokens collected in a cycle (e.g. 60 coins)
+        payout1st = _p1;
+        payout2nd = _p2;
+        payout3rd = _p3;
+        payoutDev = _dev;
+        emit SettingsUpdated("payoutsUpdated", _p1 + _p2 + _p3 + _dev);
+    }
+
     function playGame() external {
-        require(IERC20(pepecoinAddress).transferFrom(msg.sender, address(this), ENTRY_FEE), "Transfer failed");
+        require(IERC20(pepecoinAddress).transferFrom(msg.sender, address(this), entryFee), "Transfer failed");
         
         gameCount++;
         emit GamePlayed(msg.sender, gameCount);
 
-        if (gameCount >= CYCLE_SIZE) {
+        if (gameCount >= cycleSize) {
             _triggerPayout();
         }
     }
@@ -82,27 +109,27 @@ contract PepecoinArcade {
     function _triggerPayout() internal {
         // Distribute to Top 3
         if (topPlayers[0].addr != address(0)) {
-            IERC20(pepecoinAddress).transfer(topPlayers[0].addr, PAYOUT_1ST);
+            IERC20(pepecoinAddress).transfer(topPlayers[0].addr, payout1st);
         } else {
-            IERC20(pepecoinAddress).transfer(owner, PAYOUT_1ST);
+            IERC20(pepecoinAddress).transfer(owner, payout1st);
         }
 
         if (topPlayers[1].addr != address(0)) {
-            IERC20(pepecoinAddress).transfer(topPlayers[1].addr, PAYOUT_2ND);
+            IERC20(pepecoinAddress).transfer(topPlayers[1].addr, payout2nd);
         } else {
-            IERC20(pepecoinAddress).transfer(owner, PAYOUT_2ND);
+            IERC20(pepecoinAddress).transfer(owner, payout2nd);
         }
 
         if (topPlayers[2].addr != address(0)) {
-            IERC20(pepecoinAddress).transfer(topPlayers[2].addr, PAYOUT_3RD);
+            IERC20(pepecoinAddress).transfer(topPlayers[2].addr, payout3rd);
         } else {
-            IERC20(pepecoinAddress).transfer(owner, PAYOUT_3RD);
+            IERC20(pepecoinAddress).transfer(owner, payout3rd);
         }
 
         // Distribute Dev share
-        IERC20(pepecoinAddress).transfer(owner, PAYOUT_DEV);
+        IERC20(pepecoinAddress).transfer(owner, payoutDev);
 
-        emit PayoutTriggered(topPlayers[0].addr, topPlayers[1].addr, topPlayers[2].addr, 60 * 10**18);
+        emit PayoutTriggered(topPlayers[0].addr, topPlayers[1].addr, topPlayers[2].addr, payout1st + payout2nd + payout3rd + payoutDev);
 
         // Reset
         gameCount = 0;
