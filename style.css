@@ -1955,40 +1955,70 @@ input[type="checkbox"]:checked::after {
 
 @media (max-width: 900px) {
     .global-monitor {
-        top: 10px;
-        right: 10px;
-        left: auto;
-        bottom: auto;
-        width: 140px;
-        border-width: 4px;
-        z-index: 6000;
-        /* Force it on top of cabinet marquee */
-        box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+        display: none;
+        /* Hide on mobile to avoid overlap */
     }
 
-    .monitor-screen {
-        padding: 8px;
+    .intro-overlay {
+        padding: 10px;
     }
 
-    .monitor-header {
-        font-size: 8px;
-        margin-bottom: 8px;
+    .intro-content {
+        max-width: 95%;
+        padding: 15px;
     }
 
-    .rank-list {
-        gap: 6px;
+    .intro-content h1 {
+        font-size: 12px;
+        margin-bottom: 15px;
     }
 
-    .rank-item {
-        font-size: 6px;
-        padding-left: 5px;
+    .intro-rules {
+        margin-bottom: 15px;
+    }
+
+    .rule-item {
+        gap: 8px;
+        margin-bottom: 12px;
+        font-size: 7px;
+        line-height: 1.3;
+    }
+
+    .rule-icon {
+        font-size: 14px;
+        min-width: 20px;
+    }
+
+    .prizes p {
+        margin: 3px 0;
+        font-size: 7px;
+    }
+
+    .intro-btn {
+        padding: 10px 20px;
+        font-size: 9px;
     }
 }
 
 @media (max-width: 600px) {
-    .global-monitor {
-        top: 5px;
-        right: 5px;
-        width: 120px;
+    .intro-content h1 {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+
+    .rule-item {
+        gap: 6px;
+        margin-bottom: 8px;
+        font-size: 6px;
+    }
+
+    .rule-icon {
+        font-size: 12px;
+        min-width: 18px;
+    }
+
+    .intro-btn {
+        padding: 8px 15px;
+        font-size: 8px;
     }
 }
