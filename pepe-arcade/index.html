@@ -7,6 +7,7 @@
     <title>$PEPECOIN Arcade</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 </head>
 
 <body>
@@ -25,6 +26,10 @@
             <div class="screen-container">
                 <div id="lives-display"></div>
                 <div id="score-display">SCORE: <span id="score">0</span></div>
+                <div id="jackpot-status">
+                    JACKPOT: <span id="pool-count">0</span>/60 GAMES
+                </div>
+                <button id="btn-connect" class="connect-btn">CONNECT WALLET</button>
 
                 <!-- UI Overlay -->
                 <div id="ui-layer" class="ui-layer">

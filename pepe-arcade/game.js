@@ -3,6 +3,24 @@ const GRAVITY = 0.5;
 const TERMINAL_VELOCITY = 12;
 const GROUND_Y = 500; // Floor level
 
+// Web3 Config
+const PEPE_CA = "0xA9E8aCf069C58aEc8825542845Fd754e41a9489A";
+const ARCADE_CONTRACT = "REPLACE_WITH_YOUR_DEPLOYED_CONTRACT_ADDRESS";
+const ERC20_ABI = [
+    "function transferFrom(address from, address to, uint256 amount) public returns (bool)",
+    "function approve(address spender, uint256 amount) public returns (bool)",
+    "function balanceOf(address account) public view returns (uint256)",
+    "function allowance(address owner, address spender) public view returns (uint256)"
+];
+const ARCADE_ABI = [
+    "function playGame() public",
+    "function submitScore(uint256 score, string memory name) public",
+    "function gameCount() public view returns (uint256)",
+    "function topPlayer() public view returns (address addr, uint256 score, string memory name)",
+    "event GamePlayed(address indexed player, uint256 totalGames)",
+    "event PayoutTriggered(address indexed winner, uint256 score, uint256 amount)"
+];
+
 // Animation Config (Assuming sprite sheet layout)
 const ANIMATIONS = {
     idle: { row: 0, frames: 1, speed: 10 },
@@ -613,6 +631,16 @@ class Game {
         this.updateLivesUI(); // Initial Hearts
         this.setupSettings();
         this.shareInProgress = false; // Prevent double clicks
+
+        // Web3 State
+        this.provider = null;
+        this.signer = null;
+        this.arcadeContract = null;
+        this.pepeContract = null;
+        this.userAddress = null;
+        this.isConnected = false;
+
+        this.setupWeb3Listeners();
     }
 
     updateLivesUI() {
@@ -655,8 +683,12 @@ class Game {
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
-    insertCoin() {
+    async insertCoin() {
         if (this.state !== 'START') return;
+
+        const success = await this.requestPayment();
+        if (!success) return;
+
         const coin = document.getElementById('pepe-coin');
         coin.classList.add('coin-inserted');
         this.audio.playTone(800, 'square', 0.1); // "Chime"
@@ -762,11 +794,14 @@ class Game {
         const touchCoin = document.getElementById('touch-retry-coin');
         const coins = [desktopCoin, touchCoin].filter(c => c); // Filter out nulls
 
-        const handleCoinInsert = (coin) => (e) => {
+        const handleCoinInsert = (coin) => async (e) => {
             if (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
+
+            const success = await this.requestPayment();
+            if (!success) return;
 
             // Play coin insert animation
             coin.classList.add('inserting');
@@ -803,6 +838,9 @@ class Game {
             coin.onclick = handleCoinInsert(coin);
             coin.ontouchstart = handleCoinInsert(coin);
         });
+
+        // Submit score to blockchain
+        this.submitScoreToChain(this.score);
 
         // Share logic
         const btnShare = document.getElementById('btn-share');
@@ -1031,6 +1069,104 @@ class Game {
                 <span class="score">${s.score}</span>
             </div>
         `).join('');
+    }
+
+    // --- Web3 Implementation ---
+
+    setupWeb3Listeners() {
+        const btnConnect = document.getElementById('btn-connect');
+        if (btnConnect) {
+            btnConnect.onclick = () => this.connectWallet();
+        }
+
+        // Initial pool check
+        this.updateJackpotStatus();
+        setInterval(() => this.updateJackpotStatus(), 15000); // Update every 15s
+    }
+
+    async connectWallet() {
+        if (!window.ethereum) {
+            alert("No Web3 wallet detected! Install MetaMask.");
+            return;
+        }
+
+        try {
+            this.provider = new ethers.BrowserProvider(window.ethereum);
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            this.signer = await this.provider.getSigner();
+            this.userAddress = accounts[0];
+
+            this.pepeContract = new ethers.Contract(PEPE_CA, ERC20_ABI, this.signer);
+            this.arcadeContract = new ethers.Contract(ARCADE_CONTRACT, ARCADE_ABI, this.signer);
+
+            this.isConnected = true;
+            const btnConnect = document.getElementById('btn-connect');
+            btnConnect.innerText = `${this.userAddress.substring(0, 6)}...${this.userAddress.substring(38)}`;
+            btnConnect.classList.add('connected');
+
+            this.updateJackpotStatus();
+        } catch (err) {
+            console.error("Connection failed:", err);
+            alert("Failed to connect wallet.");
+        }
+    }
+
+    async updateJackpotStatus() {
+        const poolLabel = document.getElementById('pool-count');
+        if (!poolLabel) return;
+
+        try {
+            // Read-only provider for public info
+            const pubProvider = new ethers.JsonRpcProvider("https://base-rpc.publicnode.com"); // Using Base as default
+            const pubContract = new ethers.Contract(ARCADE_CONTRACT, ARCADE_ABI, pubProvider);
+
+            const count = await pubContract.gameCount();
+            poolLabel.innerText = count.toString();
+        } catch (err) {
+            console.log("No contract deployed yet or error fetching count.");
+        }
+    }
+
+    async requestPayment() {
+        if (!this.isConnected) {
+            alert("Connect wallet first!");
+            await this.connectWallet();
+            if (!this.isConnected) return false;
+        }
+
+        // 1. Check Allowance
+        try {
+            const allowance = await this.pepeContract.allowance(this.userAddress, ARCADE_CONTRACT);
+            const fee = ethers.parseEther("1.0");
+
+            if (allowance < fee) {
+                const txApprove = await this.pepeContract.approve(ARCADE_CONTRACT, ethers.MaxUint256);
+                await txApprove.wait();
+            }
+
+            // 2. Play Game TX
+            const txPlay = await this.arcadeContract.playGame();
+            const receipt = await txPlay.wait();
+
+            this.updateJackpotStatus();
+            return true;
+        } catch (err) {
+            console.error("Payment failed:", err);
+            alert("Payment failed or cancelled.");
+            return false;
+        }
+    }
+
+    async submitScoreToChain(score) {
+        if (!this.isConnected || score <= 0) return;
+
+        try {
+            const tx = await this.arcadeContract.submitScore(score, "PEPE_PLAYER");
+            await tx.wait();
+            this.updateJackpotStatus();
+        } catch (err) {
+            console.error("Score submission failed:", err);
+        }
     }
 }
 
