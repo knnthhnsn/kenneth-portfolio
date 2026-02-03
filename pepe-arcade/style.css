@@ -107,13 +107,20 @@ body {
     position: relative;
     overflow: hidden;
     /* Clips the shine to the image bounds */
-    display: flex;
-    /* Fixes collapse issues better than inline-block */
-    width: max-content;
-    /* Ensure it wraps the image */
-    height: max-content;
+    display: block;
+    height: auto;
     border-radius: 2px;
 }
+
+/* Explicit widths to prevent collapse */
+.sticker-wrapper .sticker-content {
+    width: 80px;
+}
+
+.wall-sticker-wrapper .sticker-content {
+    width: 150px;
+}
+
 
 .sticker-content::after {
     content: '';
