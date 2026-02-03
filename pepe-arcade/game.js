@@ -875,11 +875,15 @@ window.onload = () => {
     };
 
     // Scatter NFTs on the walls
+    // Scatter NFTs on the walls - strict positioning to avoid cabinet overlap
+    // Cabinet occupies roughly center 50% on wide screens, so keep stickers in outer 20%
     nftStickers.forEach((s, i) => {
         const isLeft = i % 2 === 0;
-        const x = isLeft ? (Math.random() * 20) : (80 + Math.random() * 10);
-        const y = 10 + Math.random() * 70;
-        createSticker(wallContainer, s, x, y, 1.0, (Math.random() * 20 - 10), true);
+        // Left side: 2% to 18% width
+        // Right side: 82% to 95% width
+        const x = isLeft ? (2 + Math.random() * 16) : (82 + Math.random() * 13);
+        const y = 5 + Math.random() * 80; // Spread vertically
+        createSticker(wallContainer, s, x, y, 0.9, (Math.random() * 30 - 15), true);
     });
 
     // Regular stickers stay on the cabinet
