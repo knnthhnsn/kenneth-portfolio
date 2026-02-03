@@ -94,8 +94,8 @@ body {
 }
 
 .sticker-wrapper:hover {
-    transform: scale(1.5) rotate(5deg);
-    z-index: 100 !important;
+    /* transform: scale(1.5) rotate(5deg); Removed to keep stickers behind cabinet */
+    /* z-index: 100 !important; Removed to keep stickers behind cabinet */
 }
 
 .sticker-wrapper:hover .sticker {
