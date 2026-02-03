@@ -73,7 +73,8 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 5;
-    /* display: none; Removed to show cabinet stickers */
+    display: none;
+    /* Cabinet stickers hidden as requested */
 }
 
 .sticker {
@@ -1125,46 +1126,33 @@ h1 {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    /* Allow clicks to pass through the container */
     z-index: 1;
-    /* Behind the cabinet */
-    overflow: hidden;
+    overflow: visible;
     display: none;
+    /* Hidden by default on small screens */
+}
 
-    /* DEBUG: Removed Media Query entirely so they always show */
+@media (min-width: 900px) {
     #wall-sticker-container {
-        display: block !important;
-    }
-
-    /* REVERTED overflow hidden for debug */
-    .sticker-content {
-        position: relative;
-        /* overflow: hidden; */
         display: block;
-        height: auto;
-        border-radius: 2px;
-        /* border: 2px solid red;  DEBUG BORDER */
-        z-index: 9999;
     }
+}
 
-    .wall-sticker-wrapper {
-        position: absolute;
-        pointer-events: auto;
-        /* Enable interaction with stickers */
-        cursor: pointer;
-        z-index: 2;
-        /* Inside the wall container */
-        transition: filter 0.3s;
-    }
+.wall-sticker-wrapper {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 2;
+    transition: filter 0.3s;
+}
 
-    .wall-sticker-wrapper:hover {
-        /* No scale/rotate to avoid overlapping cabinet */
-        filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-    }
+.wall-sticker-wrapper:hover {
+    filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
 
-    .wall-sticker {
-        width: 150px;
-        height: auto;
-        display: block;
-        filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
-    }
+.wall-sticker {
+    width: 150px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
+}
