@@ -1080,6 +1080,20 @@ class Game {
             btnConnect.onclick = () => this.connectWallet();
         }
 
+        // Intro Overlay
+        const btnCloseIntro = document.getElementById('btn-close-intro');
+        if (btnCloseIntro) {
+            btnCloseIntro.onclick = () => {
+                document.getElementById('intro-overlay').classList.add('hidden');
+                // Try to auto-connect if they have accounts
+                if (window.ethereum) {
+                    window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+                        if (accounts.length > 0) this.connectWallet();
+                    });
+                }
+            };
+        }
+
         // Initial pool check
         this.updateJackpotStatus();
         setInterval(() => this.updateJackpotStatus(), 15000); // Update every 15s
