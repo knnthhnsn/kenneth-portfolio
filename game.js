@@ -34,44 +34,56 @@ const ANIMATIONS = {
 // --- Audio System ---
 class SoundSynth {
     constructor() {
-        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        try {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+                this.ctx = new AudioContextClass();
+            }
+        } catch (e) {
+            console.warn("AudioContext init failed:", e);
+        }
     }
 
     playTone(freq, type, duration) {
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + duration);
+        if (!this.ctx) return;
+        try {
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {
+            console.warn("Play tone failed:", e);
+        }
     }
 
     shoot() {
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.1);
+        if (!this.ctx) return;
+        try {
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.1);
+        } catch (e) {
+            console.warn("Shoot sound failed:", e);
+        }
     }
 
-    jump() {
-        this.playTone(150, 'square', 0.1);
-    }
-
-    explosion() {
-        this.playTone(100, 'sawtooth', 0.2);
-    }
+    jump() { this.playTone(150, 'square', 0.1); }
+    explosion() { this.playTone(100, 'sawtooth', 0.2); }
 }
 
 class AssetManager {
@@ -642,6 +654,9 @@ class Game {
         this.isPaidSession = false;
 
         this.setupWeb3Listeners();
+
+        // Optimized Loop Setup
+        this.boundGameLoop = this.gameLoop.bind(this);
     }
 
     updateLivesUI() {
@@ -707,11 +722,21 @@ class Game {
     }
 
     gameLoop(timestamp) {
-        let deltaTime = timestamp - this.lastTime;
-        this.lastTime = timestamp;
-        this.update(deltaTime);
-        this.draw();
-        requestAnimationFrame(this.gameLoop.bind(this));
+        try {
+            if (!this.lastTime) this.lastTime = timestamp;
+            let deltaTime = timestamp - this.lastTime;
+            this.lastTime = timestamp;
+
+            // Clamp delta to prevent massive jumps after tab focus
+            const clampedDelta = Math.min(deltaTime, 50);
+
+            this.update(clampedDelta);
+            this.draw();
+        } catch (err) {
+            console.error("Game Loop Error:", err);
+        } finally {
+            requestAnimationFrame(this.boundGameLoop);
+        }
     }
 
     update(dt) {
@@ -1168,7 +1193,7 @@ class Game {
 
     async updateJackpotStatus() {
         const poolLabel = document.getElementById('pool-count');
-        if (!poolLabel) return;
+        if (!poolLabel || typeof ethers === 'undefined') return;
 
         try {
             // Read-only provider for public info (Ethereum Mainnet)
@@ -1179,9 +1204,11 @@ class Game {
             poolLabel.innerText = count.toString();
 
             // Also update global monitor
-            this.updateGlobalMonitor(pubContract);
+            if (pubContract) {
+                this.updateGlobalMonitor(pubContract);
+            }
         } catch (err) {
-            console.log("No contract deployed yet or error fetching count.");
+            console.log("Jackpot sync skipped - provider or contract issues.");
         }
     }
 
