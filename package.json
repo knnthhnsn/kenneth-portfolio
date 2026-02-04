@@ -1,0 +1,13 @@
+{
+    "name": "pepecoin-arcade",
+    "version": "3.1.0",
+    "description": "$PEPECOIN Arcade with Secure Signer",
+    "main": "game.js",
+    "dependencies": {
+        "ethers": "^6.11.1"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "serve ."
+    }
+}

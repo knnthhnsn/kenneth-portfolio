@@ -1352,21 +1352,33 @@ class Game {
         if (!this.isConnected || !this.isPaidSession || score <= 0) return;
 
         try {
-            // SECURITY NOTE: In a production environment, you would:
-            // 1. Send the 'score' and 'this.userAddress' to your secure backend.
-            // 2. The backend verifies the score is logically possible.
-            // 3. The backend signs a message: keccak256(userAddress, score).
-            // 4. The backend returns the 'signature' string to the frontend.
+            console.log("Requesting secure signature from backend...");
 
-            // FOR NOW: This is a placeholder showing how the contract call now requires a signature.
-            // You will need to implement a backend endpoint to provide real signatures.
-            const placeholderSignature = "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+            const response = await fetch('/api/sign', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    score: score,
+                    userAddress: this.userAddress
+                })
+            });
 
-            const tx = await this.arcadeContract.submitScore(score, "PEPE_PLAYER", placeholderSignature);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || "Failed to get signature");
+            }
+
+            const { signature } = await response.json();
+
+            console.log("Signature received. Submitting to blockchain...");
+            const tx = await this.arcadeContract.submitScore(score, "PEPE_PLAYER", signature);
             await tx.wait();
+
+            console.log("Score verified and recorded on-chain!");
             this.updateJackpotStatus();
         } catch (err) {
-            console.error("Score submission failed (Likely due to missing/invalid signature):", err);
+            console.error("Anti-Bot Verification Failed:", err.message);
+            alert("Security Check Failed: " + err.message);
         }
     }
 }
