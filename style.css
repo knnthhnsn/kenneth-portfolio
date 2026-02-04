@@ -26,20 +26,15 @@ body {
 }
 
 .arcade-cabinet {
-    position: fixed;
-    top: 20px;
-    /* Gap from top to prevent clipping */
+    position: absolute;
+    top: 0;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
     width: 90vh;
-    max-width: 95vw;
-    /* Constraint for wide screens */
+    height: auto;
     background: #222;
     background-image: url('./assets/Cabinet-base-layer/community-art1.avif');
     background-size: cover;
-    background-position: center top;
-    /* Align art to top */
+    background-position: center;
     border-radius: 20px 20px 0 0;
     border: 15px solid #111;
     border-bottom: none;
@@ -48,8 +43,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    /* Stack from top */
     overflow: visible;
     z-index: 10;
+    /* Ensure cabinet is above wall stickers (z-1) */
 }
 
 .arcade-cabinet::after {

@@ -921,24 +921,17 @@ class Game {
         }
     }
 
-    shareScore() {
+    async shareScore() {
         if (this.shareInProgress) return;
         this.shareInProgress = true;
 
         const text = `I just scored ${this.score} in $PEPECOIN ARCADE! 🐸🕹️\n\nCan you beat my high score? Play now at https://pepecoin-arcade.vercel.app #PEPECOIN #ARCADE #BASED`;
         const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
 
-        // Attempt to open in new tab
-        const shareWin = window.open(tweetUrl, '_blank');
+        // Open X sharing intent
+        window.open(tweetUrl, '_blank');
 
-        // Mobile / Popup Blocker Fallback
-        if (!shareWin || shareWin.closed || typeof shareWin.closed == 'undefined') {
-            window.location.href = tweetUrl;
-        }
-
-        setTimeout(() => {
-            this.shareInProgress = false;
-        }, 1000);
+        this.shareInProgress = false;
     }
 
     checkAABB(a, b) {
