@@ -1939,17 +1939,51 @@ input[type="checkbox"]:checked::after {
     left: calc(100% + 40px);
     bottom: 25%;
     width: 1000px;
-    height: 24px;
-    background: linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
+    height: 200px;
+    /* Taller container to allow visual sag */
+    pointer-events: none;
+    z-index: 10;
+    display: none;
+}
+
+/* Main Red Wire with Realistic Sag */
+.cabinet-wires-right::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40px;
+    /* Extend slightly left to overlap socket fully */
+    width: calc(100% + 40px);
+    height: 26px;
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 15%, transparent 40%),
+        linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
     border-top: 2px solid #400;
     border-bottom: 2px solid #400;
-    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
-    z-index: 10;
-    /* Sag effect using transform and border-radius */
-    transform: rotate(0deg);
-    transform-origin: left center;
-    border-bottom-right-radius: 50% 100px;
-    display: none;
+    box-shadow: 0 15px 35px rgba(255, 0, 0, 0.4);
+    z-index: 15;
+    /* In front of socket */
+    /* Realistic sag: large radius on the outer edge */
+    border-bottom-right-radius: 80% 60px;
+    transform: rotate(0.8deg);
+    transform-origin: left top;
+}
+
+/* Thinner Secondary Wire with Sag */
+.cabinet-wires-right-thinner {
+    position: absolute;
+    top: 45px;
+    left: -30px;
+    width: calc(100% + 30px);
+    height: 10px;
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, transparent 20%),
+        #400;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+    z-index: 14;
+    border-bottom-right-radius: 70% 40px;
+    transform: rotate(1.2deg);
+    transform-origin: left top;
 }
 
 /* 3D Power Socket Hub - Heavy Junction Box Style */
@@ -1968,6 +2002,8 @@ input[type="checkbox"]:checked::after {
     box-shadow:
         inset 0 0 15px #000,
         15px 15px 30px rgba(0, 0, 0, 0.9);
+    z-index: 1;
+    /* Behind the wires */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2052,16 +2088,9 @@ input[type="checkbox"]:checked::after {
     border-radius: 2px;
 }
 
-/* Thinner Secondary Wire */
+/* Removed old ::after wire because we use a div for better Z-control */
 .cabinet-wires-right::after {
-    content: "";
-    position: absolute;
-    top: 35px;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background: #400;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+    display: none;
 }
 
 .cabinet-wires-right::before {
