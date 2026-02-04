@@ -1936,15 +1936,17 @@ input[type="checkbox"]:checked::after {
 .cabinet-wires-right {
     position: absolute;
     left: calc(100% - 15px);
-    top: 15%;
+    bottom: 12%;
+    /* Moved to bottom */
     width: 1000px;
-    height: 10px;
-    background: linear-gradient(180deg, #0d0d0d 0%, #222 50%, #0d0d0d 100%);
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+    height: 12px;
+    background: linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
+    /* Now Red */
+    border-top: 1px solid #400;
+    border-bottom: 1px solid #400;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
     z-index: -2;
-    transform: rotate(1deg);
+    transform: rotate(-0.5deg);
     display: none;
 }
 
@@ -1952,11 +1954,12 @@ input[type="checkbox"]:checked::after {
 .cabinet-wires-right::after {
     content: "";
     position: absolute;
-    top: 18px;
+    top: 20px;
     left: 0;
     width: 100%;
-    height: 4px;
-    background: #0a0a0a;
+    height: 5px;
+    background: #400;
+    /* Dark Red */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -1967,7 +1970,7 @@ input[type="checkbox"]:checked::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0, 0, 0, 0.5) 5px);
+    background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0, 0, 0, 0.3) 5px);
     pointer-events: none;
 }
 
@@ -1977,16 +1980,29 @@ input[type="checkbox"]:checked::after {
     }
 }
 
+/* Evenly spaced sparks */
 .cabinet-wires-right .spark.s1 {
-    left: 50px;
-    top: -2px;
-    animation: spark-burst 4s infinite 1.2s;
+    left: 100px;
+    top: -5px;
+    animation: spark-burst 4s infinite;
 }
 
 .cabinet-wires-right .spark.s2 {
-    left: 200px;
-    bottom: -2px;
-    animation: spark-burst 7s infinite 3.5s;
+    left: 300px;
+    bottom: -5px;
+    animation: spark-burst 5s infinite 1.5s;
+}
+
+.cabinet-wires-right .spark.s3 {
+    left: 500px;
+    top: -3px;
+    animation: spark-burst 4.5s infinite 0.8s;
+}
+
+.cabinet-wires-right .spark.s4 {
+    left: 700px;
+    bottom: -4px;
+    animation: spark-burst 6s infinite 2s;
 }
 
 /* Electrical Sparks */
