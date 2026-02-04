@@ -1950,40 +1950,44 @@ input[type="checkbox"]:checked::after {
 .cabinet-wires-right::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: -40px;
-    /* Extend slightly left to overlap socket fully */
-    width: calc(100% + 40px);
-    height: 26px;
-    background:
-        linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 15%, transparent 40%),
-        linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
-    border-top: 2px solid #400;
-    border-bottom: 2px solid #400;
+    top: 5px;
+    left: -50px;
+    /* Overlap socket completely */
+    width: calc(100% + 50px);
+    height: 100px;
+    /* Container for the curve */
+    /* Use a thick bottom border to create the sagging wire effect */
+    border-bottom: 26px solid #b00;
+    border-left: 2px solid #400;
+    border-image: linear-gradient(180deg, #600, #b00 50%, #600) 1;
+    border-radius: 0 0 50% 20px;
     box-shadow: 0 15px 35px rgba(255, 0, 0, 0.4);
-    z-index: 15;
-    /* In front of socket */
-    /* Realistic sag: large radius on the outer edge */
-    border-bottom-right-radius: 80% 60px;
-    transform: rotate(0.8deg);
-    transform-origin: left top;
+    z-index: 25;
+    /* High enough to be over EVERYTHING on the side */
+    pointer-events: none;
+
+    /* Connection Shadow Gradient Overlay */
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 10%, transparent 40%);
+    background-size: 100% 26px;
+    background-position: bottom;
+    background-repeat: no-repeat;
 }
 
 /* Thinner Secondary Wire with Sag */
 .cabinet-wires-right-thinner {
     position: absolute;
-    top: 45px;
-    left: -30px;
-    width: calc(100% + 30px);
-    height: 10px;
-    background:
-        linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, transparent 20%),
-        #400;
+    top: 50px;
+    left: -40px;
+    width: calc(100% + 40px);
+    height: 80px;
+    border-bottom: 10px solid #400;
+    border-radius: 0 0 45% 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
-    z-index: 14;
-    border-bottom-right-radius: 70% 40px;
-    transform: rotate(1.2deg);
-    transform-origin: left top;
+    z-index: 24;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, transparent 25%);
+    background-size: 100% 10px;
+    background-position: bottom;
+    background-repeat: no-repeat;
 }
 
 /* 3D Power Socket Hub - Heavy Junction Box Style */
@@ -2093,16 +2097,7 @@ input[type="checkbox"]:checked::after {
     display: none;
 }
 
-.cabinet-wires-right::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0, 0, 0, 0.4) 8px);
-    pointer-events: none;
-}
+/* Duplicate rule removed for v1.85 */
 
 @media (min-width: 1400px) {
     .cabinet-wires-right {
