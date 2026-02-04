@@ -1933,24 +1933,52 @@ input[type="checkbox"]:checked::after {
     }
 }
 
-/* Cabinet Side Wires (Right) - Reverted to v1.83 style */
+/* Cabinet Side Wires (Right) - Layering Fix (v1.90) */
 .cabinet-wires-right {
     position: absolute;
     left: calc(100% + 40px);
     bottom: 25%;
     width: 1000px;
     height: 24px;
-    background: linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
+    z-index: 30;
+    transform: rotate(0.1deg);
+    display: none;
+    pointer-events: none;
+    /* Let clicks pass to switch behind */
+}
+
+/* The actual Red Wire - moved to pseudo-element for Z-control over child socket */
+.cabinet-wires-right::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -15px;
+    /* Overlap the socket completely */
+    width: calc(100% + 15px);
+    height: 100%;
+    /* Gradient shadow toward the cabinet + Metallic Red Texture */
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.7) 8%, transparent 25%),
+        linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
     border-top: 2px solid #400;
     border-bottom: 2px solid #400;
     box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
-    z-index: 30;
-    /* Moved in front of the socket (z-20) */
-    transform: rotate(0.1deg);
-    display: none;
-    /* Allow wires to extend slightly behind the socket hub for seamless entry */
-    padding-left: 10px;
-    margin-left: -5px;
+    z-index: 50;
+    /* Definitively in front of socket (20) */
+}
+
+/* Texture overlay on top of Red Wire */
+.cabinet-wires-right-thinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0, 0, 0, 0.4) 8px);
+    z-index: 51;
+    /* On top of red wire */
+    pointer-events: none;
+    display: block !important;
 }
 
 /* Thinner Secondary Wire Re-integrated as ::after */
@@ -1963,22 +1991,8 @@ input[type="checkbox"]:checked::after {
     height: 8px;
     background: #400;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-}
-
-.cabinet-wires-right::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0, 0, 0, 0.4) 8px);
-    pointer-events: none;
-}
-
-/* Hidden container helper */
-.cabinet-wires-right-thinner {
-    display: none;
+    z-index: 49;
+    /* Slightly behind main wire but in front of socket */
 }
 
 /* 3D Power Socket Hub - Heavy Junction Box Style */
