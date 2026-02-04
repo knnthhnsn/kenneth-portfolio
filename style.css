@@ -1939,12 +1939,13 @@ input[type="checkbox"]:checked::after {
     bottom: 12%;
     /* Moved to bottom */
     width: 1000px;
-    height: 12px;
+    height: 24px;
+    /* Doubled from 12px for BIGGER wires */
     background: linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
     /* Now Red */
-    border-top: 1px solid #400;
-    border-bottom: 1px solid #400;
-    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+    border-top: 2px solid #400;
+    border-bottom: 2px solid #400;
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
     z-index: -2;
     transform: rotate(-0.5deg);
     display: none;
@@ -1954,13 +1955,15 @@ input[type="checkbox"]:checked::after {
 .cabinet-wires-right::after {
     content: "";
     position: absolute;
-    top: 20px;
+    top: 35px;
+    /* Pushed down relative to thicker main wire */
     left: 0;
     width: 100%;
-    height: 5px;
+    height: 8px;
+    /* Also bigger secondary wire */
     background: #400;
     /* Dark Red */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .cabinet-wires-right::before {
@@ -1970,7 +1973,7 @@ input[type="checkbox"]:checked::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0, 0, 0, 0.3) 5px);
+    background: repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0, 0, 0, 0.4) 8px);
     pointer-events: none;
 }
 
@@ -1983,25 +1986,25 @@ input[type="checkbox"]:checked::after {
 /* Evenly spaced sparks */
 .cabinet-wires-right .spark.s1 {
     left: 100px;
-    top: -5px;
+    top: -10px;
     animation: spark-burst 4s infinite;
 }
 
 .cabinet-wires-right .spark.s2 {
     left: 300px;
-    bottom: -5px;
+    bottom: -12px;
     animation: spark-burst 5s infinite 1.5s;
 }
 
 .cabinet-wires-right .spark.s3 {
     left: 500px;
-    top: -3px;
+    top: -8px;
     animation: spark-burst 4.5s infinite 0.8s;
 }
 
 .cabinet-wires-right .spark.s4 {
     left: 700px;
-    bottom: -4px;
+    bottom: -10px;
     animation: spark-burst 6s infinite 2s;
 }
 
