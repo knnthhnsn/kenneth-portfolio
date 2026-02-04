@@ -1356,13 +1356,10 @@ window.onload = () => {
     window.gameInstance = game;
     game.start();
 
-    const nftStickers = ['nft0.png', 'nft1.png', 'nft2.png', 'nft3.png', 'nft4.png', 'nft5.png', 'nft6.png'];
-    const regularStickers = ['Jockstrap.png', 'basedman-white-eye.png', 'basedman.png', 'basedman1.png', 'basedman2.png', 'brain-logo.webp', 'gun.png', 'heart.png'];
-    const container = document.getElementById('sticker-container');
-    container.innerHTML = '';
 
-    const cabinetContainer = document.getElementById('sticker-container');
+    const nftStickers = ['nft0.png', 'nft1.png', 'nft2.png', 'nft3.png', 'nft4.png', 'nft5.png', 'nft6.png'];
     const wallContainer = document.getElementById('wall-sticker-container');
+    if (wallContainer) wallContainer.innerHTML = '';
 
     const createSticker = (targetContainer, filename, left, top, scale, rot, isWall) => {
         const wrapper = document.createElement('div');
