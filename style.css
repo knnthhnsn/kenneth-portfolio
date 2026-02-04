@@ -1951,7 +1951,7 @@ input[type="checkbox"]:checked::after {
     transform: rotate(0.5deg);
     /* Shadow gradient towards the cabinet (left side of wire) */
     background:
-        linear-gradient(90deg, #000 0%, transparent 10%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 10%, transparent 35%),
         linear-gradient(180deg, #600 0%, #b00 50%, #600 100%);
     display: none;
 }
