@@ -1991,10 +1991,12 @@ input[type="checkbox"]:checked::after {
     .global-monitor {
         position: fixed;
         /* Fixed to viewport */
-        top: 50%;
+        bottom: 80px;
+        /* Keep it above the bottom controls if any, but "down" */
+        top: auto;
         right: 5px;
         left: auto;
-        transform: translateY(-50%);
+        transform: none;
         width: 100px;
         border-width: 3px;
         z-index: 6000;
