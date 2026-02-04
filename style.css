@@ -1951,40 +1951,45 @@ input[type="checkbox"]:checked::after {
     content: "";
     position: absolute;
     top: 5px;
-    left: -50px;
-    /* Overlap socket completely */
-    width: calc(100% + 50px);
+    left: -60px;
+    /* Fully overlap socket */
+    width: calc(100% + 60px);
     height: 100px;
-    /* Container for the curve */
-    /* Use a thick bottom border to create the sagging wire effect */
+    /* Sag using an elliptical border-radius and large border */
     border-bottom: 26px solid #b00;
-    border-left: 2px solid #400;
-    border-image: linear-gradient(180deg, #600, #b00 50%, #600) 1;
-    border-radius: 0 0 50% 20px;
-    box-shadow: 0 15px 35px rgba(255, 0, 0, 0.4);
+    border-radius: 0 0 500px 30px;
     z-index: 25;
-    /* High enough to be over EVERYTHING on the side */
     pointer-events: none;
 
-    /* Connection Shadow Gradient Overlay */
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 10%, transparent 40%);
+    /* Connection Shadow Gradient Overlay - Stretched further right */
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 0.8) 15%,
+            rgba(0, 0, 0, 0.4) 30%,
+            transparent 60%);
     background-size: 100% 26px;
     background-position: bottom;
     background-repeat: no-repeat;
+
+    border-left: 2px solid #500;
 }
 
 /* Thinner Secondary Wire with Sag */
 .cabinet-wires-right-thinner {
     position: absolute;
-    top: 50px;
-    left: -40px;
-    width: calc(100% + 40px);
+    top: 55px;
+    left: -50px;
+    width: calc(100% + 50px);
     height: 80px;
     border-bottom: 10px solid #400;
-    border-radius: 0 0 45% 15px;
+    border-radius: 0 0 400px 20px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
     z-index: 24;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, transparent 25%);
+
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.95) 0%,
+            rgba(0, 0, 0, 0.6) 20%,
+            transparent 50%);
     background-size: 100% 10px;
     background-position: bottom;
     background-repeat: no-repeat;
