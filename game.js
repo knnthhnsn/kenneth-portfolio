@@ -928,79 +928,10 @@ class Game {
         const text = `I just scored ${this.score} in $PEPECOIN ARCADE! 🐸🕹️\n\nCan you beat my high score? Play now at https://pepecoin-arcade.vercel.app #PEPECOIN #ARCADE #BASED`;
         const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
 
-        // Ultra-aggressive mobile/touch detection
-        const isMobileDevice = ('ontouchstart' in window) ||
-            (navigator.maxTouchPoints > 0) ||
-            (window.innerWidth <= 1024) ||
-            (window.matchMedia("(pointer: coarse)").matches) ||
-            (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+        // Open X sharing intent
+        window.open(tweetUrl, '_blank');
 
-        if (isMobileDevice) {
-            console.log("Mobile share via X triggered");
-            window.location.href = tweetUrl;
-            this.shareInProgress = false;
-            return;
-        }
-
-        const btnShare = document.getElementById('btn-share');
-        if (typeof html2canvas === 'undefined') {
-            window.open(tweetUrl, '_blank');
-            this.shareInProgress = false;
-            return;
-        }
-
-        const originalText = btnShare.innerText;
-        btnShare.innerText = 'CAPTURING...';
-        btnShare.style.opacity = '0.5';
-        btnShare.style.pointerEvents = 'none';
-        document.body.classList.add('screenshot-mode');
-
-        try {
-            await new Promise(r => setTimeout(r, 400));
-            const cabinet = document.querySelector('.arcade-cabinet');
-            const canvas = await html2canvas(document.body, {
-                backgroundColor: '#1a1a1a',
-                useCORS: true,
-                scale: window.devicePixelRatio > 1 ? 2 : 1,
-                logging: false,
-                width: cabinet ? cabinet.offsetWidth : undefined
-            });
-
-            document.body.classList.remove('screenshot-mode');
-
-            // 1. Download backup
-            const link = document.createElement('a');
-            link.download = `pepecoin-arcade-score-${this.score}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-
-            // 2. Clipboard Copy
-            try {
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                if (navigator.clipboard) {
-                    const data = [new ClipboardItem({ 'image/png': blob })];
-                    await navigator.clipboard.write(data);
-                }
-            } catch (e) { console.error('Clip fail:', e); }
-
-            // 3. Open X
-            window.open(tweetUrl, '_blank');
-
-            setTimeout(() => {
-                alert("Screenshot copied! Just press Paste to attach it to your post! 🐸📸✂️");
-            }, 1000);
-        } catch (err) {
-            console.error('Screenshot failed:', err);
-            window.open(tweetUrl, '_blank');
-        } finally {
-            document.body.classList.remove('screenshot-mode');
-            if (btnShare) {
-                btnShare.innerText = originalText;
-                btnShare.style.opacity = '1';
-                btnShare.style.pointerEvents = 'auto';
-            }
-            this.shareInProgress = false;
-        }
+        this.shareInProgress = false;
     }
 
     checkAABB(a, b) {
