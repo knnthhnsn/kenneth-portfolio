@@ -1938,6 +1938,44 @@ input[type="checkbox"]:checked::after {
     font-family: 'Press Start 2P', cursive;
     position: relative;
     overflow: hidden;
+    animation: monitor-subtle-flicker 0.15s infinite, monitor-power-surge 8s infinite;
+}
+
+@keyframes monitor-subtle-flicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.98;
+    }
+}
+
+@keyframes monitor-power-surge {
+
+    0%,
+    45%,
+    55%,
+    90%,
+    94%,
+    100% {
+        opacity: 1;
+        filter: brightness(1) contrast(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        filter: brightness(0.4) contrast(1.5);
+        transform: skewX(0.5deg);
+    }
+
+    92% {
+        opacity: 0.8;
+        filter: brightness(1.8) contrast(0.8);
+        transform: translateY(1px);
+    }
 }
 
 .monitor-screen::after {
