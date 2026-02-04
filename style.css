@@ -1060,8 +1060,8 @@ h1 {
     height: 100%;
     pointer-events: none;
     /* Let clicks pass to cabinet */
-    z-index: 1;
-    /* Above room background, but below cabinet (10) */
+    z-index: 0;
+    /* Try 0 to avoid any stacking context confusion */
     overflow: visible;
     display: block !important;
     /* Force visibility */
@@ -1098,6 +1098,8 @@ h1 {
     width: 150px;
     /* Base width for wall NFTs */
     height: auto;
+    /* DEBUG: Add border to confirm presence */
+    border: 2px solid cyan;
 }
 
 .wall-sticker-wrapper:hover {
