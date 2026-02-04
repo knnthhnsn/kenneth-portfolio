@@ -1962,7 +1962,8 @@ input[type="checkbox"]:checked::after {
         linear-gradient(180deg, #200 0%, #b00 50%, #200 100%);
     border-top: 1px solid #100;
     border-bottom: 1px solid #100;
-    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
+    box-shadow: none;
+    /* Removed glow */
     z-index: 50;
     /* Definitively in front of socket (20) */
 }
@@ -1986,14 +1987,14 @@ input[type="checkbox"]:checked::after {
     content: "";
     position: absolute;
     top: 35px;
-    left: -10px;
-    /* Also extend slightly further into the machine line */
-    width: calc(100% + 10px);
+    left: 5px;
+    /* Moved further back into the connection area */
+    width: calc(100% - 5px);
     height: 8px;
     background:
         linear-gradient(90deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.8) 12%, transparent 35%),
         linear-gradient(180deg, #100 0%, #600 50%, #100 100%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     z-index: 49;
     /* Slightly behind main wire but in front of socket */
 }
