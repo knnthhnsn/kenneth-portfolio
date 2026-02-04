@@ -437,11 +437,19 @@ class Enemy extends Entity {
     }
 
     draw(ctx) {
-        if (this.image) {
+        // Dynamic fetch if missing (prevents race condition)
+        if (!this.image) {
+            this.image = this.game.assets.get('helicopter');
+        }
+
+        if (this.image && this.image.complete && this.image.width > 0) {
             ctx.drawImage(this.image, 0, 0, this.image.width, this.image.height, this.x, this.y, this.width, this.height);
         } else {
-            ctx.fillStyle = 'red';
+            // Debug fallback - highly visible
+            ctx.fillStyle = '#ff00ff'; // Neon Magenta
             ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.strokeStyle = '#fff';
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
         }
     }
 }
