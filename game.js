@@ -1151,6 +1151,7 @@ class Game {
             const handleIntroEnter = (e) => {
                 if (e.code === 'Enter') {
                     e.preventDefault();
+                    e.stopImmediatePropagation(); // Block other Enter listeners
                     btnCloseIntro.onclick();
                 }
             };
