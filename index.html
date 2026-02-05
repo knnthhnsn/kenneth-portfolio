@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$PEPECOIN Arcade v3.2.0</title>
+    <title>Kenneth XP Arcade</title>
+    <!-- Arcade Styles -->
     <link rel="stylesheet" href="style.css">
-    <!-- Build ID: 1770219440 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <!-- XP Desktop Styles -->
+    <link rel="stylesheet" href="xp-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
     <!-- Background Wall Stickers -->
     <div id="wall-sticker-container" class="wall-sticker-layer"></div>
@@ -32,17 +32,17 @@
             <div class="spark s3"></div>
         </div>
         <div class="monitor-screen">
-            <div class="monitor-header">GLOBAL TOP 3</div>
+            <div class="monitor-header">KENNETH.XP</div>
             <div id="global-rank-list" class="rank-list">
-                <div class="rank-item empty">FETCHING...</div>
-                <div class="rank-item empty">---</div>
-                <div class="rank-item empty">---</div>
+                <div class="rank-item">FULL STACK DEV</div>
+                <div class="rank-item">MULTIMEDIA</div>
+                <div class="rank-item">AARHUS, DK</div>
             </div>
             <div id="jackpot-monitor-box" class="monitor-jackpot-section">
-                <span class="label">JACKPOT ROUND:</span>
-                <span id="jackpot-status"><span id="pool-count">0</span>/60</span>
+                <span class="label">STATUS:</span>
+                <span id="jackpot-status">ONLINE</span>
             </div>
-            <div class="monitor-footer">ON-CHAIN DATA</div>
+            <div class="monitor-footer">SYSTEM READY</div>
         </div>
     </div>
 
@@ -61,122 +61,247 @@
             <div class="spark s3"></div>
             <div class="spark s4"></div>
         </div>
-        <!-- Cabinet Stickers Layer removed in v1.95 -->
 
         <!-- Marquee / Top -->
         <div class="marquee">
-            <div class="marquee-text">$PEPECOIN ARCADE v3.2.0</div>
+            <div class="marquee-text">★ KENNETH XP ★ PORTFOLIO OS v2.0</div>
         </div>
 
         <div class="monitor-bezel">
-            <div class="screen-container">
-                <div id="lives-display"></div>
-                <div id="score-display">SCORE: <span id="score">0</span></div>
-                <!-- Jackpot status moved to global monitor -->
-                <button id="btn-connect" class="connect-btn hidden">CONNECT WALLET</button>
+            <div class="screen-container" id="screen-container">
+                <!-- XP Boot Screen -->
+                <div id="boot-screen">
+                    <div class="boot-content">
+                        <div class="boot-logo">
+                            <svg viewBox="0 0 100 100" width="80" height="80">
+                                <path d="M5 5l40 5v35H5V5z" fill="#F25022" />
+                                <path d="M55 0l40 5v35H55V0z" fill="#7FBA00" />
+                                <path d="M5 55h40v35l-40-5V55z" fill="#00A4EF" />
+                                <path d="M55 55h40v30l-40 5V55z" fill="#FFB900" />
+                            </svg>
+                            <div class="boot-text">
+                                <span class="boot-microsoft">Microsoft</span>
+                                <span class="boot-windows">Windows<sup>XP</sup></span>
+                            </div>
+                        </div>
+                        <div class="boot-loading">
+                            <div class="boot-bar">
+                                <div class="boot-progress"></div>
+                            </div>
+                        </div>
+                        <div class="boot-copyright">Copyright © Microsoft Corporation</div>
+                    </div>
+                </div>
 
-                <!-- Intro Overlay -->
-                <div id="intro-overlay" class="intro-overlay">
-                    <div class="intro-content">
-                        <h1>$PEPECOIN ARCADE</h1>
-                        <div class="intro-rules">
-                            <div class="rule-item">
-                                <span class="rule-icon">💰</span>
-                                <p><strong>100 $PEPECOIN</strong> PER GAME ENTRY</p>
+                <!-- XP Desktop (The "Game" Screen) -->
+                <div id="desktop" class="xp-screen">
+                    <img id="desktop-char" src="sitting-me.png" alt="" draggable="false">
+                    <!-- Desktop Icons -->
+                    <div class="desktop-icons" id="icon-grid">
+                        <div class="desktop-icon" data-window="about" id="icon-my-computer">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='10' y='10' width='28' height='20' fill='%23666'/%3E%3Crect x='12' y='12' width='24' height='16' fill='%233a6ea5'/%3E%3Crect x='18' y='30' width='12' height='4' fill='%23666'/%3E%3C/svg%3E" alt="My Computer">
+                            <span>About Me</span>
+                        </div>
+                        <div class="desktop-icon" data-window="projects" id="icon-my-documents">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M10 10v28h28V14H24l-4-4H10z' fill='%23ffcc00'/%3E%3C/svg%3E" alt="My Documents">
+                            <span>My Portfolio</span>
+                        </div>
+                        <div class="desktop-icon" data-window="ie" id="icon-ie">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='18' fill='%23003399'/%3E%3Ctext x='24' y='32' font-family='Arial' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E" alt="Internet Explorer">
+                            <span>Internet Explorer</span>
+                        </div>
+                        <div class="desktop-icon" data-window="recycle-bin" id="icon-recycle-bin">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='14' y='14' width='20' height='24' fill='%233a6ea5'/%3E%3Crect x='12' y='10' width='24' height='4' fill='%23666'/%3E%3C/svg%3E" alt="Recycle Bin">
+                            <span>Recycle Bin</span>
+                        </div>
+                        <div class="desktop-icon" data-window="sound-test" id="icon-sound-test">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' stroke='%233a6ea5' stroke-width='1.5' fill='white'/%3E%3Cpath d='M8 4v8M4 8h8' stroke='%233a6ea5' stroke-width='1.5'/%3E%3C/svg%3E" alt="Sound Check">
+                            <span>Sound Check</span>
+                        </div>
+                    </div>
+
+                    <!-- Windows Container -->
+                    <div id="windows-container"></div>
+
+                    <!-- Taskbar -->
+                    <div id="taskbar">
+                        <div id="start-button-wrapper">
+                            <button id="start-button">
+                                <div class="start-btn-custom">
+                                    <svg width="24" height="24" viewBox="0 0 24 24">
+                                        <path d="M3 5l8-1v8H3V5zm9-1l9 1v7h-9V4zM3 14h8v8l-8-1v-7zm9 8V14h9v7l-9-1z" fill="white" />
+                                    </svg>
+                                    <span>start</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div id="taskbar-divider"></div>
+                        <div id="quick-launch">
+                            <div class="ql-icon" data-window="ie">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='18' fill='%23003399'/%3E%3Ctext x='24' y='32' font-family='Arial' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E" alt="IE">
                             </div>
-                            <div class="rule-item">
-                                <span class="rule-icon">🏆</span>
-                                <p><strong>60 GAMES</strong> PER JACKPOT ROUND</p>
+                            <div class="ql-icon" id="show-desktop">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='8' y='8' width='32' height='32' fill='%23ccc' stroke='black'/%3E%3C/svg%3E" alt="Show Desktop">
                             </div>
-                            <div class="rule-item">
-                                <span class="rule-icon">💎</span>
-                                <div class="prizes">
-                                    <p>1ST: <strong>2,500 $PEPECOIN</strong></p>
-                                    <p>2ND: <strong>1,000 $PEPECOIN</strong></p>
-                                    <p>3RD: <strong>500 $PEPECOIN</strong></p>
+                        </div>
+                        <div id="taskbar-windows"></div>
+                        <div id="system-tray">
+                            <div id="tray-icons">
+                                <div class="network-icon tray-icon active">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='9' height='7' rx='1' fill='%23777'/%3E%3Crect x='2' y='2' width='7' height='5' fill='%23222'/%3E%3Crect x='2' y='2' width='7' height='5' fill='%2300ff00' opacity='0.4' class='net-blink'/%3E%3Cpath d='M3 8l-1 2h7l-1-2z' fill='%23777'/%3E%3Crect x='6' y='5' width='9' height='7' rx='1' fill='%23777'/%3E%3Crect x='7' y='6' width='7' height='5' fill='%23222'/%3E%3Crect x='7' y='6' width='7' height='5' fill='%2300ff00' opacity='0.4' class='net-blink' style='animation-delay: 0.5s'/%3E%3Cpath d='M8 12l-1 2h7l-1-2z' fill='%23777'/%3E%3C/svg%3E" alt="Network">
+                                </div>
+                                <div id="volume-icon" class="tray-icon active">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M2 6v4h3l4 4V2L5 6H2zM12 8c0-2-1-3-2-4v8c1-1 2-2 2-4z' fill='white'/%3E%3C/svg%3E" alt="Volume">
+                                </div>
+                                <div id="info-icon" class="tray-icon" title="Sound info">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' stroke='white' stroke-width='1.5' fill='none'/%3E%3Ctext x='8' y='11.5' font-family='Arial' font-size='10' fill='white' text-anchor='middle' font-weight='bold'%3Ei%3C/text%3E%3C/svg%3E" alt="Info">
                                 </div>
                             </div>
-                            <div class="rule-item">
-                                <span class="rule-icon">🕹️</span>
-                                <p><strong>FREE PLAY</strong> AVAILABLE (NO REWARDS)</p>
+                            <div id="taskbar-clock"></div>
+                        </div>
+                    </div>
+
+                    <!-- Start Menu -->
+                    <div id="start-menu" class="hidden">
+                        <div id="start-menu-header">
+                            <div id="user-pfp">
+                                <img src="Me-pixel.jpeg" alt="Kenneth" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
+                            </div>
+                            <span id="username">Kenneth</span>
+                        </div>
+                        <div id="start-menu-body">
+                            <div id="start-menu-left">
+                                <div class="menu-item" data-window="about">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='14' fill='%23666'/%3E%3Crect x='8' y='8' width='16' height='10' fill='%233a6ea5'/%3E%3Crect x='12' y='20' width='8' height='3' fill='%23666'/%3E%3C/svg%3E">
+                                    <span>About Kenneth</span>
+                                </div>
+                                <div class="menu-item" data-window="projects">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 8v16h24V10H16l-2-2H4z' fill='%23ffcc00'/%3E%3C/svg%3E">
+                                    <span>Projects</span>
+                                </div>
+                                <div class="menu-item" data-window="msn">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%2300cc00'/%3E%3C/svg%3E">
+                                    <span>Windows Messenger</span>
+                                </div>
+                                <div class="menu-item" data-window="wmp">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23ff6600'/%3E%3Cpath d='M12 10v12l10-6z' fill='white'/%3E%3C/svg%3E">
+                                    <span>Windows Media Player</span>
+                                </div>
+                                <div class="menu-item" data-window="paint">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' fill='white' stroke='black'/%3E%3Ccircle cx='10' cy='10' r='3' fill='red'/%3E%3Ccircle cx='22' cy='10' r='3' fill='blue'/%3E%3Ccircle cx='16' cy='22' r='4' fill='yellow'/%3E%3C/svg%3E">
+                                    <span>Paint</span>
+                                </div>
+                            </div>
+                            <div id="start-menu-right">
+                                <div class="menu-item gray-text">My Documents</div>
+                                <div class="menu-item gray-text">My Pictures</div>
+                                <div class="divider"></div>
+                                <div class="menu-item" data-window="control-panel">Control Panel</div>
+                                <div class="menu-item gray-text">Help and Support</div>
+                                <div class="menu-item" data-window="search">Search</div>
+                                <div class="menu-item" data-window="cmd">Run...</div>
                             </div>
                         </div>
-                        <button id="btn-close-intro" class="intro-btn">I UNDERSTAND</button>
-                    </div>
-                </div>
-
-                <!-- Payment Overlay -->
-                <div id="payment-overlay" class="payment-overlay hidden">
-                    <h2>INSERT COINS</h2>
-                    <p>Fee: <span class="golden">100 $PEPECOIN</span> PER GAME</p>
-                    <div class="jackpot-prizes">
-                        <p class="prize-header">🏆 JACKPOT PRIZES 🏆</p>
-                        <p class="prize-line">TOTAL POOL: <span class="golden">4,000 $PEPECOIN</span></p>
-                        <p class="prize-line">1ST: <span class="golden">2,500 $PEPECOIN</span></p>
-                        <p class="prize-line">2ND: <span class="golden">1,000 $PEPECOIN</span></p>
-                        <p class="prize-line">3RD: <span class="golden">500 $PEPECOIN</span></p>
-                    </div>
-                    <div class="payment-buttons">
-                        <button id="btn-confirm-pay" class="pay-btn">PAY 100 $PEPECOIN</button>
-                        <button id="btn-free-play" class="free-btn">FREE PLAY</button>
-                    </div>
-                    <p class="free-hint">(Free games ignore on-chain rewards)</p>
-                </div>
-
-                <!-- UI Overlay -->
-                <div id="ui-layer" class="ui-layer">
-                    <div id="start-screen" class="hidden">
-                        <h1>$PEPECOIN ARCADE</h1>
-                        <p>CLICK THE COIN OR PRESS ENTER TO START</p>
-                        <div id="coin-entry-zone" class="coin-entry-zone">
-                            <img src="./assets/coin/pepecoin.webp" id="pepe-coin" class="draggable-coin" alt="PepeCoin">
-                            <div class="coin-slot-wrapper">
-                                <div class="coin-slot"></div>
-                                <div class="coin-label">INSERT COIN</div>
-                            </div>
-                        </div>
-                        <div class="controls-hint">WASD / ARROWS TO MOVE <br> SPACE / CLICK TO SHOOT <br> W / UP TO
-                            JUMP
+                        <div id="start-menu-footer">
+                            <button id="log-off-btn">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='2' width='12' height='12' fill='%23ff9900'/%3E%3C/svg%3E"> Log Off
+                            </button>
+                            <button id="shut-down-btn">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='2' width='12' height='12' fill='%23cc0000'/%3E%3C/svg%3E"> Turn Off Computer
+                            </button>
                         </div>
                     </div>
-                    <div id="game-over-screen" class="hidden">
-                        <h1>GAME OVER</h1>
-                        <p>FINAL SCORE: <span id="final-score">0</span></p>
-                        <p class="best-score-label">BEST: <span id="best-score">0</span></p>
-                        <p class="retry-hint">INSERT TICKET TO RETRY</p>
-                        <p class="desktop-hint">OR PRESS ENTER</p>
-                        <button id="btn-share" class="share-btn">SHARE ON X</button>
+                </div>
+
+                <!-- BSOD Overlay -->
+                <div id="bsod" class="hidden">
+                    <div class="bsod-content">
+                        <p>A problem has been detected and Windows has been shut down to prevent damage to your computer.</p>
+                        <p>The problem seems to be caused by the following file: KENNETH_AWESOME.SYS</p>
+                        <p>PAGE_FAULT_IN_NONPAGED_AREA</p>
+                        <br>
+                        <p>If this is the first time you've seen this stop error screen, restart your computer. If this screen appears again, follow these steps:</p>
+                        <br>
+                        <p>Check to make sure any new hardware or software is properly installed. If this is a new installation, ask your hardware or software manufacturer for any Windows updates you might need.</p>
+                        <br>
+                        <p>If problems continue, disable or remove any newly installed hardware or software. Disable BIOS memory options such as caching or shadowing. If you need to use Safe Mode to remove or disable components, restart your computer, press F8 to select Advanced Startup Options, and then select Safe Mode.</p>
+                        <br>
+                        <p>Technical information:</p>
+                        <p>*** STOP: 0x00000050 (0xFD3094C2, 0x00000001, 0xFBFE7617, 0x00000000)</p>
+                        <br>
+                        <p>Beginning dump of physical memory</p>
+                        <p>Physical memory dump complete.</p>
+                        <p>Contact your system administrator or technical support group for further assistance.</p>
+                        <br>
+                        <p>Press any key to restart _</p>
                     </div>
                 </div>
 
-                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <!-- CRT Effects -->
                 <div class="scanlines"></div>
                 <div class="crt-glow"></div>
                 <div class="screen-reflection"></div>
+
+                <!-- SVG Filters -->
+                <svg style="display: none;">
+                    <defs>
+                        <filter id="plastic-crinkles">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.05 0.1" numOctaves="5" result="noise" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" />
+                        </filter>
+                        <filter id="chrome-mercury">
+                            <feSpecularLighting surfaceScale="8" specularConstant="1.2" specularExponent="80" lighting-color="#ffffff" in="SourceGraphic" result="spec">
+                                <fePointLight x="-2000" y="-2000" z="5000" />
+                            </feSpecularLighting>
+                            <feComposite in="spec" in2="SourceGraphic" operator="in" />
+                        </filter>
+                        <filter id="glass-frost">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" result="noise" />
+                            <feColorMatrix type="saturate" values="0" in="noise" result="gray" />
+                            <feComponentTransfer in="gray" result="alpha">
+                                <feFuncA type="linear" slope="0.05" />
+                            </feComponentTransfer>
+                            <feComposite in="SourceGraphic" result="base" />
+                            <feComposite in="alpha" in2="base" operator="atop" />
+                        </filter>
+                        <filter id="cotton-surface">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="billows" />
+                            <feColorMatrix type="saturate" values="0" in="billows" result="monoBillows" />
+                            <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="4" result="fibers" />
+                            <feColorMatrix type="saturate" values="0" in="fibers" result="monoFibers" />
+                            <feComposite in="monoBillows" in2="monoFibers" operator="arithmetic" k1="0" k2="1" k3="0.3" k4="0" result="combinedNoise" />
+                            <feDiffuseLighting in="combinedNoise" lighting-color="#fffaf0" surfaceScale="1.5" result="texture">
+                                <feDistantLight azimuth="45" elevation="65" />
+                            </feDiffuseLighting>
+                            <feComposite in="texture" in2="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="0.15" k4="0" />
+                        </filter>
+                        <filter id="cotton-fibers">
+                            <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="noise" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+                        </filter>
+                    </defs>
+                </svg>
             </div>
         </div>
 
-        <!-- Control Panel (Now Inside the Cabinet) -->
+        <!-- Control Panel -->
         <div class="control-panel">
             <div class="buttons-group">
                 <div class="button-area">
-                    <div class="arcade-btn red" id="btn-jump"></div>
-                    <div class="btn-label">JUMP</div>
+                    <div class="arcade-btn red" id="btn-a"></div>
+                    <div class="btn-label">SELECT</div>
                 </div>
                 <div class="button-area">
-                    <div class="arcade-btn green" id="btn-shoot"></div>
-                    <div class="btn-label">SHOOT</div>
+                    <div class="arcade-btn green" id="btn-b"></div>
+                    <div class="btn-label">CLICK</div>
                 </div>
             </div>
 
-            <!-- Coin Slot for Desktop Retry -->
             <div class="control-panel-coin-slot desktop-coin-slot" id="desktop-coin-slot">
-                <img src="./assets/golden-ticket.png" class="retry-ticket" id="desktop-golden-ticket"
-                    alt="Insert Golden Ticket">
+                <img src="./assets/golden-ticket.png" class="retry-ticket" id="desktop-golden-ticket" alt="Insert Golden Ticket">
                 <div class="coin-slot-hole"></div>
             </div>
 
-            <!-- Service/Settings Button -->
             <div class="service-panel-btn" id="btn-settings" title="Service Menu">
                 <div class="btn-inner"></div>
                 <div class="btn-label">SERVICE</div>
@@ -189,34 +314,22 @@
             </div>
         </div>
 
-        <div class="brand-logo">$PEPECOIN ARCADE</div>
+        <div class="brand-logo">KENNETH.XP</div>
 
-        <!-- Coin Return / Front Panel Details -->
         <div class="cabinet-front-details">
             <div class="coin-return">
-                <!-- Retry Ticket for Touch Devices -->
-                <img src="./assets/golden-ticket.png" class="retry-ticket touch-retry-ticket" id="touch-golden-ticket"
-                    alt="Insert Golden Ticket">
+                <img src="./assets/golden-ticket.png" class="retry-ticket touch-retry-ticket" id="touch-golden-ticket" alt="Insert Golden Ticket">
             </div>
         </div>
     </div>
 
-    <!-- Extend cabinet bottom -->
     <div class="cabinet-fill-bottom"></div>
-
-    <!-- Settings Panel -->
-    <!-- Settings Panel Removed from here -->
-
-    <!-- Intro Overlay moved inside screen-container -->
-
-    <!-- Payment Overlay moved inside screen-container -->
 
     <!-- Settings Panel -->
     <div id="settings-panel" class="settings-panel hidden">
         <div class="settings-content">
             <button class="close-settings" id="close-settings">&times;</button>
             <h2>SERVICE PANEL</h2>
-
             <div class="settings-section">
                 <h3>SCREEN SETTINGS</h3>
                 <div class="toggle-group">
@@ -228,20 +341,20 @@
                     <input type="checkbox" id="toggle-glow" checked>
                 </div>
             </div>
-
             <div class="settings-section">
-                <h3>TOP COMMANDERS</h3>
-                <div id="leaderboard-list" class="leaderboard-list">
-                    <!-- Loaded via JS -->
-                    <div class="leaderboard-item loading">LOADING SCORES...</div>
+                <h3>SYSTEM INFO</h3>
+                <div class="leaderboard-list">
+                    <div class="leaderboard-item">Windows XP Portfolio OS</div>
+                    <div class="leaderboard-item">Version 2.0</div>
+                    <div class="leaderboard-item">Kenneth, Aarhus DK</div>
                 </div>
             </div>
-
-            <p class="panel-footer">PEPE ARCADE SYSTEM V1.0</p>
+            <p class="panel-footer">KENNETH.XP SYSTEM V2.0</p>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="xp-script.js"></script>
     <script src="game.js"></script>
 </body>
-
 </html>
