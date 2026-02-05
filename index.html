@@ -20,7 +20,7 @@
 
         <!-- Monitor/Screen -->
         <div class="monitor-bezel">
-            <div class="screen-container" style="position: relative; overflow: hidden;">
+            <div class="screen-container" id="screen-container">
                 
                 <!-- XP BOOT SCREEN -->
                 <div id="boot-screen">
@@ -46,8 +46,8 @@
                     </div>
                 </div>
 
-                <!-- XP DESKTOP (The Game Screen) -->
-                <div id="desktop" class="xp-luna">
+                <!-- XP DESKTOP (Hidden initially, shown after boot) -->
+                <div id="desktop" class="xp-luna" style="display: none;">
                     <img id="desktop-char" src="sitting-me.png" alt="" draggable="false">
                     
                     <!-- Desktop Icons -->
@@ -82,7 +82,7 @@
                         <div id="start-button-wrapper">
                             <button id="start-button">
                                 <div class="start-btn-custom">
-                                    <svg width="24" height="24" viewBox="0 0 24 24">
+                                    <svg width="20" height="20" viewBox="0 0 24 24">
                                         <path d="M3 5l8-1v8H3V5zm9-1l9 1v7h-9V4zM3 14h8v8l-8-1v-7zm9 8V14h9v7l-9-1z" fill="white" />
                                     </svg>
                                     <span>start</span>
@@ -92,10 +92,10 @@
                         <div id="taskbar-divider"></div>
                         <div id="quick-launch">
                             <div class="ql-icon" data-window="ie">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='18' fill='%23003399'/%3E%3Ctext x='24' y='32' font-family='Arial' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E" alt="IE">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='18' fill='%23003399'/%3E%3Ctext x='24' y='32' font-family='Arial' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E" alt="IE" style="width:24px;height:24px;">
                             </div>
                             <div class="ql-icon" id="show-desktop">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='8' y='8' width='32' height='32' fill='%23ccc' stroke='black'/%3E%3C/svg%3E" alt="Show Desktop">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='8' y='8' width='32' height='32' fill='%23ccc' stroke='black'/%3E%3C/svg%3E" alt="Show Desktop" style="width:24px;height:24px;">
                             </div>
                         </div>
                         <div id="taskbar-windows"></div>
@@ -106,9 +106,6 @@
                                 </div>
                                 <div id="volume-icon" class="tray-icon active">
                                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M2 6v4h3l4 4V2L5 6H2zM12 8c0-2-1-3-2-4v8c1-1 2-2 2-4z' fill='white'/%3E%3C/svg%3E" alt="Volume">
-                                </div>
-                                <div id="info-icon" class="tray-icon" title="Sound info">
-                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' stroke='white' stroke-width='1.5' fill='none'/%3E%3Ctext x='8' y='11.5' font-family='Arial' font-size='10' fill='white' text-anchor='middle' font-weight='bold'%3Ei%3C/text%3E%3C/svg%3E" alt="Info">
                                 </div>
                             </div>
                             <div id="taskbar-clock"></div>
@@ -132,10 +129,6 @@
                                 <div class="menu-item" data-window="projects">
                                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 8v16h24V10H16l-2-2H4z' fill='%23ffcc00'/%3E%3C/svg%3E">
                                     <span>Projects</span>
-                                </div>
-                                <div class="menu-item" data-window="msn">
-                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%2300cc00'/%3E%3C/svg%3E">
-                                    <span>Windows Messenger</span>
                                 </div>
                                 <div class="menu-item" data-window="wmp">
                                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23ff6600'/%3E%3Cpath d='M12 10v12l10-6z' fill='white'/%3E%3C/svg%3E">
@@ -167,15 +160,20 @@
                     </div>
                 </div>
 
-                <!-- BSOD -->
+                <!-- BSOD (Hidden by default) -->
                 <div id="bsod" class="hidden">
                     <div class="bsod-content">
                         <p>A problem has been detected and Windows has been shut down to prevent damage to your computer.</p>
                         <p>The problem seems to be caused by the following file: KENNETH_AWESOME.SYS</p>
                         <p>PAGE_FAULT_IN_NONPAGED_AREA</p><br>
-                        <p>If this is the first time you've seen this stop error screen, restart your computer.</p><br>
+                        <p>If this is the first time you've seen this stop error screen, restart your computer. If this screen appears again, follow these steps:</p><br>
+                        <p>Check to make sure any new hardware or software is properly installed. If this is a new installation, ask your hardware or software manufacturer for any Windows updates you might need.</p><br>
+                        <p>If problems continue, disable or remove any newly installed hardware or software. Disable BIOS memory options such as caching or shadowing. If you need to use Safe Mode to remove or disable components, restart your computer, press F8 to select Advanced Startup Options, and then select Safe Mode.</p><br>
                         <p>Technical information:</p>
                         <p>*** STOP: 0x00000050 (0xFD3094C2, 0x00000001, 0xFBFE7617, 0x00000000)</p><br>
+                        <p>Beginning dump of physical memory</p>
+                        <p>Physical memory dump complete.</p>
+                        <p>Contact your system administrator or technical support group for further assistance.</p><br>
                         <p>Press any key to restart _</p>
                     </div>
                 </div>
@@ -184,46 +182,6 @@
                 <div class="scanlines"></div>
                 <div class="crt-glow"></div>
                 <div class="screen-reflection"></div>
-
-                <!-- SVG Filters for XP -->
-                <svg style="display: none;">
-                    <defs>
-                        <filter id="plastic-crinkles">
-                            <feTurbulence type="fractalNoise" baseFrequency="0.05 0.1" numOctaves="5" result="noise" />
-                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" />
-                        </filter>
-                        <filter id="chrome-mercury">
-                            <feSpecularLighting surfaceScale="8" specularConstant="1.2" specularExponent="80" lighting-color="#ffffff" in="SourceGraphic" result="spec">
-                                <fePointLight x="-2000" y="-2000" z="5000" />
-                            </feSpecularLighting>
-                            <feComposite in="spec" in2="SourceGraphic" operator="in" />
-                        </filter>
-                        <filter id="glass-frost">
-                            <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" result="noise" />
-                            <feColorMatrix type="saturate" values="0" in="noise" result="gray" />
-                            <feComponentTransfer in="gray" result="alpha">
-                                <feFuncA type="linear" slope="0.05" />
-                            </feComponentTransfer>
-                            <feComposite in="SourceGraphic" result="base" />
-                            <feComposite in="alpha" in2="base" operator="atop" />
-                        </filter>
-                        <filter id="cotton-surface">
-                            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="billows" />
-                            <feColorMatrix type="saturate" values="0" in="billows" result="monoBillows" />
-                            <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="4" result="fibers" />
-                            <feColorMatrix type="saturate" values="0" in="fibers" result="monoFibers" />
-                            <feComposite in="monoBillows" in2="monoFibers" operator="arithmetic" k1="0" k2="1" k3="0.3" k4="0" result="combinedNoise" />
-                            <feDiffuseLighting in="combinedNoise" lighting-color="#fffaf0" surfaceScale="1.5" result="texture">
-                                <feDistantLight azimuth="45" elevation="65" />
-                            </feDiffuseLighting>
-                            <feComposite in="texture" in2="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="0.15" k4="0" />
-                        </filter>
-                        <filter id="cotton-fibers">
-                            <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="noise" />
-                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
-                        </filter>
-                    </defs>
-                </svg>
             </div>
         </div>
 
@@ -290,5 +248,19 @@
 
     <!-- Scripts -->
     <script src="xp-script.js"></script>
+    <script>
+        // Boot sequence
+        setTimeout(() => {
+            document.getElementById('boot-screen').style.display = 'none';
+            document.getElementById('desktop').style.display = 'block';
+        }, 3000);
+
+        // BSOD recovery
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                document.getElementById('bsod').classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
