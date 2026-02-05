@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KENNETH XP - Retro Arcade Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Arcade Ambience -->
+    <div class="arcade-bg"></div>
+    <div class="particles" id="particles"></div>
+    
+    <!-- Main Arcade Cabinet -->
+    <div class="cabinet-container">
+        <!-- Marquee Header -->
+        <div class="marquee">
+            <div class="marquee-lights">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <h1 class="marquee-text">
+                <span class="neon-flicker">★</span>
+                KENNETH XP
+                <span class="neon-flicker">★</span>
+            </h1>
+            <div class="marquee-subtitle">INSERT COIN TO CONTINUE</div>
+        </div>
+        
+        <!-- Coin Slot Panel -->
+        <div class="coin-panel">
+            <div class="coin-slot" id="coinSlot">
+                <div class="slot-opening"></div>
+                <label>CREDITS</label>
+                <div class="credits-display" id="credits">00</div>
+            </div>
+            <div class="speaker-grille">
+                <div class="grille-line"></div>
+                <div class="grille-line"></div>
+                <div class="grille-line"></div>
+                <div class="grille-line"></div>
+                <div class="grille-line"></div>
+            </div>
+        </div>
+        
+        <!-- CRT Screen Container -->
+        <div class="screen-bezel">
+            <div class="screen-glass">
+                <!-- CRT Effects -->
+                <div class="crt-overlay">
+                    <div class="scanlines"></div>
+                    <div class="crt-flicker"></div>
+                    <div class="crt-curvature"></div>
+                    <div class="screen-glare"></div>
+                </div>
+                
+                <!-- Screen Content -->
+                <div class="screen-content" id="screenContent">
+                    <!-- Boot Sequence -->
+                    <div class="boot-sequence" id="bootSequence">
+                        <div class="boot-text"></div>
+                    </div>
+                    
+                    <!-- Main Menu -->
+                    <div class="menu-screen hidden" id="menuScreen">
+                        <div class="menu-header">
+                            <div class="player-info">
+                                <span>PLAYER: KENNETH</span>
+                                <span>LEVEL: <span id="playerLevel">1</span></span>
+                            </div>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" id="xpBar"></div>
+                                <span class="xp-text">XP: <span id="xpValue">0</span>/100</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-options">
+                            <div class="menu-item selected" data-section="about">
+                                <span class="arrow">►</span>
+                                <span class="text">ABOUT ME</span>
+                                <span class="highscore">PTS: 1000</span>
+                            </div>
+                            <div class="menu-item" data-section="projects">
+                                <span class="arrow">►</span>
+                                <span class="text">PROJECTS</span>
+                                <span class="highscore">PTS: 5000</span>
+                            </div>
+                            <div class="menu-item" data-section="skills">
+                                <span class="arrow">►</span>
+                                <span class="text">SKILLS TREE</span>
+                                <span class="highscore">PTS: 2500</span>
+                            </div>
+                            <div class="menu-item" data-section="contact">
+                                <span class="arrow">►</span>
+                                <span class="text">CONTACT</span>
+                                <span class="highscore">PTS: BONUS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-footer">
+                            <span>USE JOYSTICK TO SELECT</span>
+                            <span>PRESS BUTTON TO START</span>
+                        </div>
+                    </div>
+                    
+                    <!-- About Section -->
+                    <div class="content-section hidden" id="aboutSection">
+                        <div class="section-header">
+                            <span class="back-hint">◄ B</span>
+                            <h2>PLAYER PROFILE</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="profile-card">
+                                <div class="avatar-box">
+                                    <div class="pixel-avatar">KH</div>
+                                    <div class="class-badge">AI ARCHITECT</div>
+                                </div>
+                                <div class="profile-text">
+                                    <h3>KENNETH HANSEN</h3>
+                                    <p class="title">AI Systems Architect & Content Strategist</p>
+                                    <p class="description typewriter" data-text="Building intelligent systems and crafting compelling technical narratives. Specialized in Local LLMs, AI Agents, and automation workflows."></p>
+                                    <div class="stats-grid">
+                                        <div class="stat"><span>STR</span><div class="bar"><div style="width: 75%"></div></div></div>
+                                        <div class="stat"><span>INT</span><div class="bar"><div style="width: 95%"></div></div></div>
+                                        <div class="stat"><span>DEX</span><div class="bar"><div style="width: 85%"></div></div></div>
+                                        <div class="stat"><span>CHA</span><div class="bar"><div style="width: 90%"></div></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projects Section -->
+                    <div class="content-section hidden" id="projectsSection">
+                        <div class="section-header">
+                            <span class="back-hint">◄ B</span>
+                            <h2>QUEST LOG</h2>
+                        </div>
+                        <div class="content-body projects-grid">
+                            <div class="project-card" data-project="basedman">
+                                <div class="project-icon">🎯</div>
+                                <h3>BASEDMAN</h3>
+                                <p>Full-stack platform project</p>
+                                <div class="project-stats">
+                                    <span>DIFFICULTY: ★★★★☆</span>
+                                    <span>STATUS: COMPLETE</span>
+                                </div>
+                            </div>
+                            <div class="project-card" data-project="havblink">
+                                <div class="project-icon">⚓</div>
+                                <h3>HAVBLINK</h3>
+                                <p>Maritime industry platform</p>
+                                <div class="project-stats">
+                                    <span>DIFFICULTY: ★★★★★</span>
+                                    <span>STATUS: COMPLETE</span>
+                                </div>
+                            </div>
+                            <div class="project-card" data-project="emmerys">
+                                <div class="project-icon">🥐</div>
+                                <h3>EMMERYS</h3>
+                                <p>Bakery chain digital presence</p>
+                                <div class="project-stats">
+                                    <span>DIFFICULTY: ★★★☆☆</span>
+                                    <span>STATUS: COMPLETE</span>
+                                </div>
+                            </div>
+                            <div class="project-card" data-project="boos">
+                                <div class="project-icon">🎮</div>
+                                <h3>BOOS PLATFORM</h3>
+                                <p>Gaming/community platform</p>
+                                <div class="project-stats">
+                                    <span>DIFFICULTY: ★★★★☆</span>
+                                    <span>STATUS: COMPLETE</span>
+                                </div>
+                            </div>
+                            <div class="project-card" data-project="bitcoin">
+                                <div class="project-icon">₿</div>
+                                <h3>BITCOIN GUIDE</h3>
+                                <p>Educational resource site</p>
+                                <div class="project-stats">
+                                    <span>DIFFICULTY: ★★★☆☆</span>
+                                    <span>STATUS: COMPLETE</span>
+                                </div>
+                            </div>
+                            <div class="project-card" data-project="writing">
+                                <div class="project-icon">✍️</div>
+                                <h3>FREELANCE WRITING</h3>
+                                <p>Technical content & strategy</p>
+                                <div class="project-stats">
+                                    <span>DIFFICULTY: ★★★★☆</span>
+                                    <span>STATUS: ACTIVE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="content-section hidden" id="skillsSection">
+                        <div class="section-header">
+                            <span class="back-hint">◄ B</span>
+                            <h2>SKILL TREE</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="skill-tree">
+                                <div class="skill-category">
+                                    <h3>🧠 AI/ML BRANCH</h3>
+                                    <div class="skill-nodes">
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">🤖</span>
+                                            <span class="node-name">Local LLMs</span>
+                                            <span class="node-level">LVL 9</span>
+                                        </div>
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">🎯</span>
+                                            <span class="node-name">AI Agents</span>
+                                            <span class="node-level">LVL 8</span>
+                                        </div>
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">🔗</span>
+                                            <span class="node-name">RAG Systems</span>
+                                            <span class="node-level">LVL 7</span>
+                                        </div>
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">⚡</span>
+                                            <span class="node-name">Automation</span>
+                                            <span class="node-level">LVL 9</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="skill-category">
+                                    <h3>💻 DEV BRANCH</h3>
+                                    <div class="skill-nodes">
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">🌐</span>
+                                            <span class="node-name">Web Development</span>
+                                            <span class="node-level">LVL 8</span>
+                                        </div>
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">📱</span>
+                                            <span class="node-name">App Development</span>
+                                            <span class="node-level">LVL 6</span>
+                                        </div>
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">☁️</span>
+                                            <span class="node-name">Cloud Architecture</span>
+                                            <span class="node-level">LVL 7</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="skill-category">
+                                    <h3>✍️ CONTENT BRANCH</h3>
+                                    <div class="skill-nodes">
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">📚</span>
+                                            <span class="node-name">Technical Writing</span>
+                                            <span class="node-level">LVL 9</span>
+                                        </div>
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">📊</span>
+                                            <span class="node-name">Content Strategy</span>
+                                            <span class="node-level">LVL 8</span>
+                                        </div>
+                                        <div class="skill-node unlocked">
+                                            <span class="node-icon">🎨</span>
+                                            <span class="node-name">UX Writing</span>
+                                            <span class="node-level">LVL 7</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Section -->
+                    <div class="content-section hidden" id="contactSection">
+                        <div class="section-header">
+                            <span class="back-hint">◄ B</span>
+                            <h2>CONNECTION PROTOCOL</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="contact-terminal">
+                                <div class="terminal-header">
+                                    <span>root@kenneth:~$</span>
+                                    <span class="cursor-blink">_</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <p>> Initializing contact sequence...</p>
+                                    <p>> Loading communication channels...</p>
+                                    <div class="contact-links">
+                                        <a href="mailto:kenneth@example.com" class="contact-item" data-xp="25">
+                                            <span class="contact-icon">📧</span>
+                                            <span class="contact-text">EMAIL DIRECT</span>
+                                        </a>
+                                        <a href="https://github.com/kenneth" target="_blank" class="contact-item" data-xp="25">
+                                            <span class="contact-icon">💻</span>
+                                            <span class="contact-text">GITHUB REPOS</span>
+                                        </a>
+                                        <a href="https://linkedin.com/in/kenneth" target="_blank" class="contact-item" data-xp="25">
+                                            <span class="contact-icon">💼</span>
+                                            <span class="contact-text">LINKEDIN</span>
+                                        </a>
+                                        <a href="#" class="contact-item" data-xp="50" id="downloadResume">
+                                            <span class="contact-icon">📄</span>
+                                            <span class="contact-text">DOWNLOAD RESUME</span>
+                                        </a>
+                                    </div>
+                                    <p class="terminal-prompt">> Ready for connection_</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Detail Modal -->
+                    <div class="project-modal hidden" id="projectModal">
+                        <div class="modal-content">
+                            <h3 id="modalTitle">PROJECT TITLE</h3>
+                            <p id="modalDesc">Project description goes here...</p>
+                            <div class="modal-stats" id="modalStats"></div>
+                            <button class="modal-close" id="modalClose">CLOSE [B]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <!-- Joystick -->
+            <div class="joystick-area">
+                <div class="joystick-base">
+                    <div class="joystick-ball" id="joystick">
+                        <div class="stick"></div>
+                    </div>
+                </div>
+                <label class="control-label">NAVIGATE</label>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="buttons-area">
+                <div class="button-row">
+                    <div class="arcade-button red" id="btnA" data-key="a">
+                        <div class="button-top"></div>
+                        <label>A</label>
+                    </div>
+                    <div class="arcade-button blue" id="btnB" data-key="b">
+                        <div class="button-top"></div>
+                        <label>B</label>
+                    </div>
+                </div>
+                <div class="button-labels">
+                    <span>SELECT</span>
+                    <span>BACK</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cabinet Base -->
+        <div class="cabinet-base">
+            <div class="ventilation">
+                <div class="vent-line"></div>
+                <div class="vent-line"></div>
+                <div class="vent-line"></div>
+                <div class="vent-line"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Controls -->
+    <div class="mobile-controls" id="mobileControls">
+        <div class="mobile-joystick" id="mobileJoystick">
+            <div class="m-joystick-base">
+                <div class="m-joystick-ball"></div>
+            </div>
+        </div>
+        <div class="mobile-buttons">
+            <button class="m-btn m-btn-a" data-key="a">A</button>
+            <button class="m-btn m-btn-b" data-key="b">B</button>
+        </div>
+    </div>
+    
+    <!-- Start Overlay -->
+    <div class="start-overlay" id="startOverlay">
+        <div class="start-content">
+            <h1 class="glitch" data-text="KENNETH XP">KENNETH XP</h1>
+            <p class="blink">CLICK ANYWHERE OR PRESS START</p>
+            <div class="start-hint">Use keyboard: ↑↓←→ or WASD + Z/A X/B</div>
+        </div>
+    </div>
+    
+    <!-- Audio Context (for future sound effects) -->
+    <div id="audioContext" style="display:none;"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
