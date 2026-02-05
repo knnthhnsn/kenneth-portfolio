@@ -3,475 +3,643 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KENNETH XP ARCADE</title>
+    <title>Kenneth XP Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Courier New',monospace;background:#0a0a0f;overflow:hidden;height:100vh;display:flex;justify-content:center;align-items:center}
-        .arcade-cabinet{width:95vw;height:95vh;max-width:1200px;background:linear-gradient(145deg,#2a2a3e,#1a1a2e);border-radius:20px;border:8px solid #333;box-shadow:0 0 100px rgba(0,255,0,.2),inset 0 0 50px rgba(0,0,0,.5);display:flex;flex-direction:column;position:relative}
-        .marquee{background:linear-gradient(180deg,#2a1a3e,#1a1a2e);border-bottom:4px solid #333;padding:15px;text-align:center}
-        .marquee-text{font-size:1.5rem;color:#0f0;text-shadow:0 0 10px #0f0,0 0 20px #0f0;animation:flicker 3s infinite}
-        .marquee-subtitle{color:#ff0;font-size:.8rem;margin-top:5px;animation:pulse 2s infinite}
-        .monitor-bezel{flex:1;background:#111;border:15px solid #222;border-radius:10px;margin:20px;position:relative;box-shadow:inset 0 0 30px rgba(0,0,0,.8)}
-        .screen-container{position:relative;width:100%;height:100%;background:#0d1b0d;overflow:hidden}
-        .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.3) 2px,rgba(0,0,0,.3) 4px);pointer-events:none;z-index:100;animation:scanline 8s linear infinite}
-        .crt-glow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,255,0,.05) 0%,transparent 70%);pointer-events:none;z-index:99}
-        .crt-flicker{position:absolute;inset:0;background:rgba(0,255,0,.03);pointer-events:none;z-index:98;animation:flicker 5s infinite}
-        .screen-content{position:relative;width:100%;height:100%;padding:20px;color:#0f0;overflow-y:auto;z-index:1}
-        .screen-content::-webkit-scrollbar{width:8px}
-        .screen-content::-webkit-scrollbar-track{background:#0d1b0d}
-        .screen-content::-webkit-scrollbar-thumb{background:#0f0;border-radius:4px}
-        .ui-overlay{position:absolute;inset:0;pointer-events:none;z-index:50}
-        #score-display{position:absolute;top:10px;left:10px;color:#0f0;font-size:14px;text-shadow:0 0 5px #0f0}
-        #lives-display{position:absolute;top:10px;right:10px;color:#f00;font-size:14px}
-        .control-panel{background:linear-gradient(145deg,#2a2a3e,#1a1a2e);border-top:4px solid #333;padding:20px;display:flex;justify-content:space-around;align-items:center;border-radius:0 0 12px 12px}
-        .joystick-area{text-align:center}
-        .joystick-base{width:100px;height:100px;background:radial-gradient(circle at 30% 30%,#444,#111);border-radius:50%;border:4px solid #555;position:relative;box-shadow:inset 0 5px 15px rgba(0,0,0,.5)}
-        .joystick-ball{width:40px;height:40px;background:radial-gradient(circle at 30% 30%,#666,#222);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:transform .1s}
-        .joystick-ball.active{transform:translate(-50%,-50%) scale(.9)}
-        .buttons-group{display:flex;gap:30px}
-        .button-area{text-align:center}
-        .arcade-btn{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;position:relative;box-shadow:0 5px 15px rgba(0,0,0,.5);transition:transform .1s}
-        .arcade-btn:active{transform:translateY(5px)}
-        .arcade-btn.red{background:radial-gradient(circle at 30% 30%,#ff6b6b,#c92a2a)}
-        .arcade-btn.green{background:radial-gradient(circle at 30% 30%,#51cf66,#2b8a3e)}
-        .btn-label{color:#0ff;font-size:10px;margin-top:8px}
-        .brand-logo{text-align:center;padding:10px;color:#0f0;font-size:12px;opacity:.5}
-        .hidden{display:none!important}
-        .menu-screen{height:100%;display:flex;flex-direction:column}
-        .menu-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;border-bottom:2px dashed #0f0;margin-bottom:20px;font-size:12px}
-        .xp-bar-container{flex:1;max-width:200px;margin-left:20px}
-        .xp-bar{height:15px;background:#111;border:2px solid #0f0;position:relative;overflow:hidden}
-        .xp-fill{height:100%;background:linear-gradient(90deg,#0f0,#0ff);width:0%;transition:width .5s;box-shadow:0 0 10px #0f0}
-        .menu-options{flex:1;display:flex;flex-direction:column;justify-content:center;gap:15px}
-        .menu-item{display:flex;align-items:center;gap:15px;padding:15px;background:rgba(0,255,0,.05);border:2px solid transparent;cursor:pointer;transition:all .2s;font-size:14px}
-        .menu-item:hover,.menu-item.selected{background:rgba(0,255,0,.1);border-color:#0f0;box-shadow:0 0 20px rgba(0,255,0,.3)}
-        .menu-item .arrow{opacity:0;transition:opacity .2s}
-        .menu-item.selected .arrow{opacity:1;animation:blink .5s infinite}
-        .menu-item .text{flex:1}
-        .menu-item .highscore{font-size:10px;color:#ff0}
-        .menu-footer{display:flex;justify-content:space-between;padding-top:15px;border-top:2px dashed #0f0;font-size:10px;color:#0ff;margin-top:auto}
-        .content-section{display:none;height:100%;flex-direction:column}
-        .content-section.active{display:flex}
-        .section-header{display:flex;align-items:center;gap:15px;padding-bottom:10px;border-bottom:2px solid #0f0;margin-bottom:15px}
-        .section-header h2{font-size:16px;color:#0f0;text-shadow:0 0 10px #0f0}
-        .back-hint{font-size:10px;color:#0ff;padding:5px 10px;background:rgba(0,255,255,.1);border-radius:3px;cursor:pointer}
-        .content-body{flex:1;overflow-y:auto;font-size:14px;line-height:1.6}
-        .profile-card{display:grid;grid-template-columns:auto 1fr;gap:20px;padding:15px;background:rgba(0,255,0,.05);border:2px solid #0f0;border-radius:10px}
-        .avatar-box{text-align:center}
-        .pixel-avatar{width:80px;height:80px;background:linear-gradient(135deg,#0f0,#0ff);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#000;font-weight:bold}
-        .class-badge{margin-top:8px;padding:5px 10px;background:#f0f;color:#fff;font-size:8px;border-radius:3px}
-        .profile-text h3{color:#ff0;margin-bottom:5px;font-size:18px}
-        .profile-text .title{color:#0ff;margin-bottom:15px}
-        .profile-text .description{color:#aaa;margin-bottom:15px}
-        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        .stat{display:flex;align-items:center;gap:10px;font-size:12px}
-        .stat span{width:40px;color:#0f0}
-        .stat-bar{flex:1;height:12px;background:#111;border:1px solid #333;overflow:hidden}
-        .stat-bar div{height:100%;background:linear-gradient(90deg,#0f0,#0ff)}
-        .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
-        .project-card{background:rgba(0,255,0,.05);border:2px solid #333;border-radius:10px;padding:15px;cursor:pointer;transition:all .3s}
-        .project-card:hover{border-color:#0f0;box-shadow:0 0 20px rgba(0,255,0,.3);transform:translateY(-5px)}
-        .project-card h3{color:#0f0;font-size:12px;margin:10px 0}
-        .project-card p{font-size:12px;color:#aaa}
-        .project-icon{font-size:24px}
-        .project-stats{font-size:10px;color:#0ff;margin-top:10px}
-        .skill-tree{display:flex;flex-direction:column;gap:15px}
-        .skill-category{background:rgba(0,255,0,.05);border:2px solid #333;border-radius:10px;padding:15px}
-        .skill-category h3{color:#0ff;font-size:14px;margin-bottom:15px;text-align:center;border-bottom:2px dashed #333;padding-bottom:10px}
-        .skill-nodes{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-        .skill-node{width:100px;text-align:center;padding:10px;background:#111;border:2px solid #0f0;border-radius:8px;font-size:10px}
-        .skill-node .node-icon{font-size:20px;display:block;margin-bottom:5px}
-        .skill-node .node-name{display:block;color:#fff;margin-bottom:3px}
-        .skill-node .node-level{color:#ff0;font-size:8px}
-        .contact-terminal{background:#000;border:2px solid #0f0;border-radius:5px;padding:15px}
-        .terminal-header{color:#0f0;border-bottom:1px solid #0f0;padding-bottom:10px;margin-bottom:15px;font-size:14px}
-        .terminal-body{line-height:1.8}
-        .terminal-body>p{color:#0f0;margin-bottom:10px;font-size:12px}
-        .contact-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
-        .contact-item{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(0,255,0,.1);border:1px solid #0f0;border-radius:5px;text-decoration:none;color:#fff;transition:all .3s;cursor:pointer}
-        .contact-item:hover{background:rgba(0,255,0,.2);box-shadow:0 0 15px rgba(0,255,0,.3)}
-        .terminal-prompt{color:#0ff;margin-top:15px;font-size:12px}
-        .project-modal{position:absolute;inset:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;z-index:200}
-        .project-modal.active{display:flex}
-        .modal-content{background:#0d1b0d;border:4px solid #0f0;border-radius:10px;padding:30px;max-width:80%;text-align:center;box-shadow:0 0 50px rgba(0,255,0,.3)}
-        .modal-content h3{color:#ff0;font-size:16px;margin-bottom:15px}
-        .modal-content p{color:#aaa;font-size:14px;line-height:1.6;margin-bottom:15px}
-        .modal-close{margin-top:15px;padding:10px 20px;background:#0f0;color:#000;border:none;border-radius:5px;font-family:'Courier New',monospace;font-size:12px;cursor:pointer}
-        .start-overlay{position:fixed;inset:0;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;z-index:1000}
-        .start-content{text-align:center}
-        .start-content h1{font-size:2.5rem;color:#0f0;text-shadow:0 0 20px #0f0;margin-bottom:20px;animation:glitch 2s infinite}
-        .start-content p{color:#ff0;font-size:1rem;margin-bottom:10px;animation:blink 1s infinite}
-        .start-hint{color:#0ff;font-size:.7rem}
-        @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
-        @keyframes flicker{0%,100%{opacity:1}50%{opacity:.95}}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.8}}
-        @keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
-        @keyframes glitch{0%,100%{transform:translate(0)}20%{transform:translate(-2px,2px)}40%{transform:translate(-2px,-2px)}60%{transform:translate(2px,2px)}80%{transform:translate(2px,-2px)}}
-        @media(max-width:768px){.arcade-cabinet{width:100vw;height:100vh;border-radius:0}.control-panel{flex-direction:column;gap:20px}.joystick-base{width:80px;height:80px}.joystick-ball{width:30px;height:30px}.arcade-btn{width:50px;height:50px}.projects-grid{grid-template-columns:1fr}.contact-links{grid-template-columns:1fr}.profile-card{grid-template-columns:1fr}}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Press Start 2P', cursive;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Arcade Cabinet Container */
+        .arcade-cabinet {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            background: linear-gradient(145deg, #2d2d44 0%, #1a1a2e 50%, #0f0f1a 100%);
+            border-radius: 20px 20px 40px 40px;
+            padding: 30px;
+            box-shadow: 
+                0 0 0 8px #0f0f1a,
+                0 0 0 12px #333,
+                0 20px 60px rgba(0,0,0,0.8),
+                inset 0 2px 10px rgba(255,255,255,0.1);
+        }
+
+        /* Cabinet Header/Marquee */
+        .cabinet-header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(180deg, #ff0066 0%, #cc0052 100%);
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 10px rgba(255,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cabinet-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .cabinet-title {
+            font-size: clamp(16px, 4vw, 28px);
+            color: #fff;
+            text-shadow: 
+                0 0 10px #ff0066,
+                0 0 20px #ff0066,
+                0 0 40px #ff0066;
+            letter-spacing: 4px;
+        }
+
+        /* CRT Screen Container */
+        .screen-bezel {
+            background: linear-gradient(145deg, #3a3a5c 0%, #2a2a44 50%, #1a1a2e 100%);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 
+                inset 0 5px 20px rgba(0,0,0,0.5),
+                0 5px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* CRT Screen */
+        .crt-screen {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 100px rgba(0,0,0,0.9),
+                0 0 0 2px #333;
+        }
+
+        /* The XP Desktop iframe */
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* CRT Effects Overlay */
+        .crt-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            animation: flicker 0.15s infinite;
+        }
+
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.1),
+                rgba(0,0,0,0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 11;
+            opacity: 0.3;
+        }
+
+        .screen-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 80px rgba(100, 149, 237, 0.1);
+            pointer-events: none;
+            z-index: 12;
+            border-radius: 10px;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.98; }
+        }
+
+        /* Screen corner screws */
+        .screw {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #666 0%, #333 100%);
+            border-radius: 50%;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 15;
+        }
+
+        .screw::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 60%;
+            height: 2px;
+            background: #222;
+            box-shadow: 0 2px 0 #222;
+        }
+
+        .screw-tl { top: 8px; left: 8px; }
+        .screw-tr { top: 8px; right: 8px; }
+        .screw-bl { bottom: 8px; left: 8px; }
+        .screw-br { bottom: 8px; right: 8px; }
+
+        /* Controls Panel */
+        .controls-panel {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(180deg, #2a2a44 0%, #1a1a2e 100%);
+            border-radius: 0 0 30px 30px;
+            margin-top: 20px;
+        }
+
+        /* Joystick */
+        .joystick-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .joystick-base {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #444 0%, #222 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.5),
+                inset 0 2px 5px rgba(255,255,255,0.1);
+        }
+
+        .joystick-stick {
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #ff4444 0%, #cc0000 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 3px 8px rgba(0,0,0,0.4),
+                inset 0 2px 5px rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .joystick-stick:active {
+            transform: scale(0.9);
+        }
+
+        .joystick-label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        /* Arcade Buttons */
+        .buttons-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .arcade-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 
+                0 5px 0 rgba(0,0,0,0.3),
+                0 5px 15px rgba(0,0,0,0.3),
+                inset 0 2px 5px rgba(255,255,255,0.3);
+            transition: all 0.1s;
+        }
+
+        .arcade-btn:active {
+            transform: translateY(5px);
+            box-shadow: 
+                0 0 0 rgba(0,0,0,0.3),
+                inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .arcade-btn::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 20%;
+            width: 30%;
+            height: 30%;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+        }
+
+        .btn-a { background: radial-gradient(circle at 30% 30%, #4dff4d 0%, #00cc00 100%); }
+        .btn-b { background: radial-gradient(circle at 30% 30%, #ff4d4d 0%, #cc0000 100%); }
+        .btn-c { background: radial-gradient(circle at 30% 30%, #4d4dff 0%, #0000cc 100%); }
+        .btn-d { background: radial-gradient(circle at 30% 30%, #ffff4d 0%, #cccc00 100%); }
+
+        .btn-label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        /* Coin Slot */
+        .coin-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .coin-slot-opening {
+            width: 60px;
+            height: 8px;
+            background: linear-gradient(180deg, #111 0%, #333 50%, #111 100%);
+            border-radius: 4px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        .coin-slot-label {
+            font-size: 8px;
+            color: #666;
+        }
+
+        /* Instructions Panel */
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .instructions h3 {
+            font-size: 12px;
+            color: #ff0066;
+            margin-bottom: 10px;
+        }
+
+        .instructions p {
+            font-size: 10px;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .key {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #333;
+            border-radius: 4px;
+            border: 1px solid #555;
+            color: #fff;
+            font-family: 'VT323', monospace;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .cabinet-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .insert-coin {
+            font-size: 14px;
+            color: #ffcc00;
+            animation: blink 1s infinite;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .controls-panel {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .arcade-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .joystick-base {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: opacity 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            color: #0f0;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            animation: loadingPulse 0.5s infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 20px;
+            border: 2px #0f0;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: #0f0;
+            animation: loadingProgress 2s ease-out forwards;
+        }
+
+        @keyframes loadingProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
     </style>
 </head>
 <body>
     <div class="arcade-cabinet">
-        <div class="marquee">
-            <div class="marquee-text">★ KENNETH XP ARCADE ★</div>
-            <div class="marquee-subtitle">INSERT COIN TO CONTINUE</div>
+        <!-- Header/Marquee -->
+        <div class="cabinet-header">
+            <h1 class="cabinet-title">★ KENNETH XP ★</h1>
         </div>
-        
-        <div class="monitor-bezel">
-            <div class="screen-container">
-                <div class="scanlines"></div>
-                <div class="crt-glow"></div>
-                <div class="crt-flicker"></div>
-                <div class="ui-overlay">
-                    <div id="score-display">SCORE: <span id="score">0</span></div>
-                    <div id="lives-display">♥♥♥</div>
+
+        <!-- CRT Screen -->
+        <div class="screen-bezel">
+            <div class="crt-screen" id="screen">
+                <!-- Loading Screen -->
+                <div class="loading-screen" id="loading">
+                    <div class="loading-text">LOADING WINDOWS XP...</div>
+                    <div class="loading-bar"></div>
                 </div>
                 
-                <div class="screen-content" id="screenContent">
-                    <!-- Boot Screen -->
-                    <div id="bootScreen" style="height:100%;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px;font-size:16px">
-                        <div id="bootText"></div>
-                    </div>
-                    
-                    <!-- Main Menu -->
-                    <div class="menu-screen hidden" id="menuScreen">
-                        <div class="menu-header">
-                            <div>PLAYER: KENNETH</div>
-                            <div>LEVEL: <span id="playerLevel">1</span></div>
-                            <div class="xp-bar-container">
-                                <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
-                            </div>
-                        </div>
-                        <div class="menu-options" id="menuOptions">
-                            <div class="menu-item selected" data-section="about">
-                                <span class="arrow">►</span>
-                                <span class="text">ABOUT ME</span>
-                                <span class="highscore">1000 PTS</span>
-                            </div>
-                            <div class="menu-item" data-section="projects">
-                                <span class="arrow">►</span>
-                                <span class="text">PROJECTS</span>
-                                <span class="highscore">5000 PTS</span>
-                            </div>
-                            <div class="menu-item" data-section="skills">
-                                <span class="arrow">►</span>
-                                <span class="text">SKILLS TREE</span>
-                                <span class="highscore">2500 PTS</span>
-                            </div>
-                            <div class="menu-item" data-section="contact">
-                                <span class="arrow">►</span>
-                                <span class="text">CONTACT</span>
-                                <span class="highscore">BONUS</span>
-                            </div>
-                        </div>
-                        <div class="menu-footer">
-                            <span>USE JOYSTICK TO SELECT</span>
-                            <span>PRESS RED BUTTON TO START</span>
-                        </div>
-                    </div>
-                    
-                    <!-- About Section -->
-                    <div class="content-section" id="aboutSection">
-                        <div class="section-header">
-                            <span class="back-hint" onclick="goBack()">◄ BACK</span>
-                            <h2>PLAYER PROFILE</h2>
-                        </div>
-                        <div class="content-body">
-                            <div class="profile-card">
-                                <div class="avatar-box">
-                                    <div class="pixel-avatar">KH</div>
-                                    <div class="class-badge">AI ARCHITECT</div>
-                                </div>
-                                <div class="profile-text">
-                                    <h3>KENNETH HANSEN</h3>
-                                    <p class="title">AI Systems Architect & Content Strategist</p>
-                                    <p class="description">Building intelligent systems and crafting compelling technical narratives. Specialized in Local LLMs, AI Agents, and automation workflows based in Denmark.</p>
-                                    <div class="stats-grid">
-                                        <div class="stat"><span>STR</span><div class="stat-bar"><div style="width:75%"></div></div></div>
-                                        <div class="stat"><span>INT</span><div class="stat-bar"><div style="width:95%"></div></div></div>
-                                        <div class="stat"><span>DEX</span><div class="stat-bar"><div style="width:85%"></div></div></div>
-                                        <div class="stat"><span>CHA</span><div class="stat-bar"><div style="width:90%"></div></div></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Projects Section -->
-                    <div class="content-section" id="projectsSection">
-                        <div class="section-header">
-                            <span class="back-hint" onclick="goBack()">◄ BACK</span>
-                            <h2>QUEST LOG</h2>
-                        </div>
-                        <div class="content-body">
-                            <div class="projects-grid">
-                                <div class="project-card" onclick="showProject('basedman')">
-                                    <div class="project-icon">🎯</div>
-                                    <h3>BASEDMAN</h3>
-                                    <p>Meme hero platform with NFT collection</p>
-                                    <div class="project-stats">DIFFICULTY: ★★★★☆ | STATUS: COMPLETE</div>
-                                </div>
-                                <div class="project-card" onclick="showProject('havblink')">
-                                    <div class="project-icon">⚓</div>
-                                    <h3>HAVBLINK</h3>
-                                    <p>Danish wine company website</p>
-                                    <div class="project-stats">DIFFICULTY: ★★★☆☆ | STATUS: COMPLETE</div>
-                                </div>
-                                <div class="project-card" onclick="showProject('emmerys')">
-                                    <div class="project-icon">🥐</div>
-                                    <h3>EMMERYS</h3>
-                                    <p>Bakery chain e-commerce</p>
-                                    <div class="project-stats">DIFFICULTY: ★★★☆☆ | STATUS: COMPLETE</div>
-                                </div>
-                                <div class="project-card" onclick="showProject('boos')">
-                                    <div class="project-icon">🎮</div>
-                                    <h3>BOOS</h3>
-                                    <p>Gaming/community platform</p>
-                                    <div class="project-stats">DIFFICULTY: ★★★★☆ | STATUS: COMPLETE</div>
-                                </div>
-                                <div class="project-card" onclick="showProject('bitcoin')">
-                                    <div class="project-icon">₿</div>
-                                    <h3>BITCOIN GUIDE</h3>
-                                    <p>Educational resource site</p>
-                                    <div class="project-stats">DIFFICULTY: ★★★☆☆ | STATUS: COMPLETE</div>
-                                </div>
-                                <div class="project-card" onclick="showProject('portfolio')">
-                                    <div class="project-icon">💼</div>
-                                    <h3>FREELANCE WRITING</h3>
-                                    <p>Technical content & strategy</p>
-                                    <div class="project-stats">DIFFICULTY: ★★★★☆ | STATUS: ACTIVE</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Skills Section -->
-                    <div class="content-section" id="skillsSection">
-                        <div class="section-header">
-                            <span class="back-hint" onclick="goBack()">◄ BACK</span>
-                            <h2>SKILL TREE</h2>
-                        </div>
-                        <div class="content-body">
-                            <div class="skill-tree">
-                                <div class="skill-category">
-                                    <h3>🧠 AI/ML BRANCH</h3>
-                                    <div class="skill-nodes">
-                                        <div class="skill-node"><span class="node-icon">🤖</span><span class="node-name">Local LLMs</span><span class="node-level">LVL 9</span></div>
-                                        <div class="skill-node"><span class="node-icon">🎯</span><span class="node-name">AI Agents</span><span class="node-level">LVL 8</span></div>
-                                        <div class="skill-node"><span class="node-icon">⚡</span><span class="node-name">Automation</span><span class="node-level">LVL 9</span></div>
-                                    </div>
-                                </div>
-                                <div class="skill-category">
-                                    <h3>💻 DEV BRANCH</h3>
-                                    <div class="skill-nodes">
-                                        <div class="skill-node"><span class="node-icon">🌐</span><span class="node-name">Web Dev</span><span class="node-level">LVL 8</span></div>
-                                        <div class="skill-node"><span class="node-icon">📱</span><span class="node-name">App Dev</span><span class="node-level">LVL 6</span></div>
-                                        <div class="skill-node"><span class="node-icon">☁️</span><span class="node-name">Cloud</span><span class="node-level">LVL 7</span></div>
-                                    </div>
-                                </div>
-                                <div class="skill-category">
-                                    <h3>✍️ CONTENT BRANCH</h3>
-                                    <div class="skill-nodes">
-                                        <div class="skill-node"><span class="node-icon">📚</span><span class="node-name">Tech Writing</span><span class="node-level">LVL 9</span></div>
-                                        <div class="skill-node"><span class="node-icon">📊</span><span class="node-name">Strategy</span><span class="node-level">LVL 8</span></div>
-                                        <div class="skill-node"><span class="node-icon">🎨</span><span class="node-name">UX Writing</span><span class="node-level">LVL 7</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Contact Section -->
-                    <div class="content-section" id="contactSection">
-                        <div class="section-header">
-                            <span class="back-hint" onclick="goBack()">◄ BACK</span>
-                            <h2>CONNECTION PROTOCOL</h2>
-                        </div>
-                        <div class="content-body">
-                            <div class="contact-terminal">
-                                <div class="terminal-header">root@kenneth:~$</div>
-                                <div class="terminal-body">
-                                    <p>> Initializing contact sequence...</p>
-                                    <p>> Loading communication channels...</p>
-                                    <div class="contact-links">
-                                        <a class="contact-item" onclick="addXP(25)">📧 EMAIL DIRECT</a>
-                                        <a class="contact-item" onclick="addXP(25)">💻 GITHUB</a>
-                                        <a class="contact-item" onclick="addXP(25)">💼 LINKEDIN</a>
-                                        <a class="contact-item" onclick="addXP(50)">📄 RESUME</a>
-                                    </div>
-                                    <p class="terminal-prompt">> Ready for connection_</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Project Modal -->
-                    <div class="project-modal" id="projectModal">
-                        <div class="modal-content">
-                            <h3 id="modalTitle">PROJECT</h3>
-                            <p id="modalDesc">Description</p>
-                            <button class="modal-close" onclick="closeModal()">CLOSE [B]</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- XP Desktop iframe -->
+                <iframe 
+                    class="screen-content" 
+                    id="xpScreen"
+                    src="https://knnthhnsn.github.io/kenneth-xp-portfolio/"
+                    allow="autoplay; fullscreen"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                ></iframe>
+                
+                <!-- CRT Effects -->
+                <div class="crt-overlay"></div>
+                <div class="scanlines"></div>
+                <div class="screen-glow"></div>
+                
+                <!-- Screws -->
+                <div class="screw screw-tl"></div>
+                <div class="screw screw-tr"></div>
+                <div class="screw screw-bl"></div>
+                <div class="screw screw-br"></div>
             </div>
         </div>
-        
-        <div class="control-panel">
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <!-- Joystick -->
             <div class="joystick-area">
-                <div class="joystick-base" id="joystickBase">
-                    <div class="joystick-ball" id="joystick"></div>
+                <div class="joystick-base">
+                    <div class="joystick-stick" id="joystick"></div>
                 </div>
-                <div class="btn-label">MOVE</div>
+                <span class="joystick-label">Move</span>
             </div>
-            <div class="buttons-group">
-                <div class="button-area">
-                    <button class="arcade-btn red" id="btnA"></button>
-                    <div class="btn-label">SELECT [A]</div>
+
+            <!-- Buttons -->
+            <div class="buttons-area">
+                <div class="buttons-row">
+                    <button class="arcade-btn btn-a" id="btnA" title="Select/Click"></button>
+                    <button class="arcade-btn btn-b" id="btnB" title="Right Click"></button>
                 </div>
-                <div class="button-area">
-                    <button class="arcade-btn green" id="btnB"></button>
-                    <div class="btn-label">BACK [B]</div>
+                <span class="btn-label">Actions</span>
+            </div>
+
+            <div class="buttons-area">
+                <div class="buttons-row">
+                    <button class="arcade-btn btn-c" id="btnC" title="Start Menu"></button>
+                    <button class="arcade-btn btn-d" id="btnD" title="Refresh"></button>
                 </div>
+                <span class="btn-label">System</span>
+            </div>
+
+            <!-- Coin Slot -->
+            <div class="coin-slot">
+                <div class="coin-slot-opening"></div>
+                <span class="coin-slot-label">CREDITS: ∞</span>
             </div>
         </div>
-        
-        <div class="brand-logo">KENNETH XP ARCADE - INSERT COIN TO CONTINUE</div>
-    </div>
-    
-    <!-- Start Overlay -->
-    <div class="start-overlay" id="startOverlay">
-        <div class="start-content">
-            <h1>KENNETH XP</h1>
-            <p>CLICK ANYWHERE OR PRESS START</p>
-            <div class="start-hint">ARROWS/WASD to Move | Z/A to Select | X/B to Back</div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>HOW TO PLAY</h3>
+            <p>
+                <span class="key">WASD</span> or <span class="key">ARROWS</span> to move mouse<br>
+                <span class="key">SPACE</span> or <span class="key">ENTER</span> to click<br>
+                <span class="key">ESC</span> to close windows<br>
+                Double-click icons to open apps!
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="cabinet-footer">
+            <p class="insert-coin">PRESS START TO BEGIN</p>
         </div>
     </div>
 
     <script>
-        let currentScreen='boot',selectedIndex=0,score=0,xp=0,level=1;
-        const menuItems=document.querySelectorAll('.menu-item');
-        const sections=['about','projects','skills','contact'];
-        const projectData={
-            basedman:{name:'BASEDMAN',desc:'Meme hero platform with NFT collection. Features 2877 unique NFTs, $BMAN token integration, and Kekspace metaverse. Built with HTML, CSS, and JavaScript with Matrix rain effects and custom cursor.'},
-            havblink:{name:'HAVBLINK',desc:'Danish wine company website showcasing organic wines from Sydfyn. Features responsive design, product showcase, and Danish cultural elements. Professional business site with modern aesthetics.'},
-            emmerys:{name:'EMMERYS',desc:'Bakery chain e-commerce and digital presence. Danish bakery with multiple locations, featuring web design with CSS styling and commercial focus.'},
-            boos:{name:'BOOS PLATFORM',desc:'Gaming and community platform with custom features. Built with HTML and JavaScript, includes interactive elements and community-focused design.'},
-            bitcoin:{name:'BITCOIN GUIDE',desc:'Educational resource site explaining Bitcoin fundamentals. Features interactive guides, clean design, and accessible content for beginners.'},
-            portfolio:{name:'FREELANCE WRITING',desc:'Technical content creation business. SaaS blog posts, documentation, newsletters, and AI consulting services. Active business with ongoing projects.'}
-        };
+        // Loading screen
+        setTimeout(() => {
+            document.getElementById('loading').classList.add('hidden');
+        }, 2500);
+
+        // Arcade Controls Integration
+        const iframe = document.getElementById('xpScreen');
+        let mouseX = 400, mouseY = 300;
         
-        function updateMenu(){
-            menuItems.forEach((item,index)=>{
-                item.classList.toggle('selected',index===selectedIndex);
-            });
-        }
-        
-        function selectSection(){
-            const section=sections[selectedIndex];
-            document.getElementById('menuScreen').classList.add('hidden');
-            document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
-            document.getElementById(section+'Section').classList.add('active');
-            currentScreen=section;
-            addXP(10);
-        }
-        
-        function goBack(){
-            document.querySelectorAll('.content-section').forEach(s=>s.classList.remove('active'));
-            document.getElementById('menuScreen').classList.remove('hidden');
-            currentScreen='menu';
-        }
-        
-        function showProject(id){
-            const p=projectData[id];
-            document.getElementById('modalTitle').textContent=p.name;
-            document.getElementById('modalDesc').textContent=p.desc;
-            document.getElementById('projectModal').classList.add('active');
-            addXP(20);
-        }
-        
-        function closeModal(){
-            document.getElementById('projectModal').classList.remove('active');
-        }
-        
-        function addXP(amount){
-            xp+=amount;
-            score+=amount;
-            document.getElementById('score').textContent=score;
-            if(xp>=100){
-                xp=0;
-                level++;
-                document.getElementById('playerLevel').textContent=level;
-            }
-            document.getElementById('xpFill').style.width=xp+'%';
-        }
-        
-        // Boot sequence
-        function bootSequence(){
-            const text=document.getElementById('bootText');
-            const lines=['BOOT SEQUENCE INITIATED...','LOADING KENNETH XP v1.0...','MOUNTING FILESYSTEMS...','INITIALIZING AI MODULES...','LOADING PORTFOLIO ASSETS...','SYSTEM READY'];
-            let i=0;
-            function typeLine(){
-                if(i<lines.length){
-                    text.innerHTML+=lines[i]+'<br>';
-                    i++;
-                    setTimeout(typeLine,300);
-                }else{
-                    setTimeout(()=>{
-                        document.getElementById('bootScreen').classList.add('hidden');
-                        document.getElementById('menuScreen').classList.remove('hidden');
-                        currentScreen='menu';
-                    },500);
-                }
-            }
-            typeLine();
-        }
-        
-        // Controls
-        document.getElementById('btnA').addEventListener('click',()=>{
-            if(currentScreen==='menu')selectSection();
-        });
-        
-        document.getElementById('btnB').addEventListener('click',()=>{
-            if(currentScreen!=='menu')goBack();
-            else closeModal();
-        });
-        
-        document.getElementById('joystick').addEventListener('click',()=>{
-            if(currentScreen==='menu'){
-                selectedIndex=(selectedIndex+1)%menuItems.length;
-                updateMenu();
-            }
-        });
-        
-        // Keyboard controls
-        document.addEventListener('keydown',(e)=>{
-            if(currentScreen==='menu'){
-                if(e.key==='ArrowDown'||e.key==='s'){selectedIndex=(selectedIndex+1)%menuItems.length;updateMenu();}
-                if(e.key==='ArrowUp'||e.key==='w'){selectedIndex=(selectedIndex-1+menuItems.length)%menuItems.length;updateMenu();}
-                if(e.key==='Enter'||e.key==='z'||e.key==='a')selectSection();
-            }else{
-                if(e.key==='Escape'||e.key==='x'||e.key==='b')goBack();
-            }
-            if(e.key==='Escape')closeModal();
-        });
-        
-        // Start
-        document.getElementById('startOverlay').addEventListener('click',function(){
-            this.style.display='none';
-            bootSequence();
-        });
-        
-        // Menu item clicks
-        menuItems.forEach((item,index)=>{
-            item.addEventListener('click',()=>{
-                selectedIndex=index;
-                updateMenu();
-                selectSection();
+        // Button click effects
+        document.querySelectorAll('.arcade-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.style.transform = 'translateY(5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 100);
             });
         });
+
+        // Joystick movement simulation
+        const joystick = document.getElementById('joystick');
+        let joyPressed = false;
         
-        console.log('🎮 KENNETH XP ARCADE - PRESS START');
+        joystick.addEventListener('mousedown', () => joyPressed = true);
+        document.addEventListener('mouseup', () => joyPressed = false);
+
+        // Button A - Simulate click in iframe
+        document.getElementById('btnA').addEventListener('click', () => {
+            try {
+                iframe.contentWindow.document.elementFromPoint(mouseX, mouseY)?.click();
+            } catch(e) {
+                // Cross-origin restrictions may apply
+                console.log('Arcade button A pressed');
+            }
+        });
+
+        // Button B - Right click
+        document.getElementById('btnB').addEventListener('click', () => {
+            console.log('Right click simulated');
+        });
+
+        // Button C - Focus/Start
+        document.getElementById('btnC').addEventListener('click', () => {
+            iframe.focus();
+        });
+
+        // Button D - Refresh
+        document.getElementById('btnD').addEventListener('click', () => {
+            iframe.src = iframe.src;
+        });
+
+        // Keyboard controls for arcade feel
+        document.addEventListener('keydown', (e) => {
+            const iframe = document.getElementById('xpScreen');
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    joystick.style.transform = 'translateY(-5px)';
+                    setTimeout(() => joystick.style.transform = '', 100);
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    joystick.style.transform = 'translateY(5px)';
+                    setTimeout(() => joystick.style.transform = '', 100);
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    joystick.style.transform = 'translateX(-5px)';
+                    setTimeout(() => joystick.style.transform = '', 100);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    joystick.style.transform = 'translateX(5px)';
+                    setTimeout(() => joystick.style.transform = '', 100);
+                    break;
+                case ' ':
+                case 'Enter':
+                    document.getElementById('btnA').click();
+                    document.getElementById('btnA').style.transform = 'translateY(5px)';
+                    setTimeout(() => document.getElementById('btnA').style.transform = '', 100);
+                    break;
+            }
+        });
+
+        // Focus iframe on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                iframe.focus();
+            }, 3000);
+        });
+
+        // Coin slot easter egg
+        document.querySelector('.coin-slot').addEventListener('click', () => {
+            const label = document.querySelector('.coin-slot-label');
+            label.textContent = 'CREDITS: 99';
+            setTimeout(() => {
+                label.textContent = 'CREDITS: ∞';
+            }, 2000);
+        });
     </script>
 </body>
 </html>
